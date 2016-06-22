@@ -1,0 +1,41 @@
+// Global, not-user-modifiable configuration. Server IPs and suchlike.
+{
+  "SERVERS": {
+    "RELAY": {
+      "HOST": "lobby.faforever.com",
+      "PORT": 8000
+    },
+    "REPLAY": {
+      "HOST": "lobby.faforever.com",
+      "PORT": 15000
+    },
+    "TURN": {
+      "HOST": "faforever.com",
+      "PORT": 3478
+    },
+    "LOBBY": {
+      "HOST": "lobby.faforever.com",
+      "PORT": 8001
+    },
+    "PROXY": {
+      "HOST": "proxy.faforever.com",
+      "PORT": 9124
+    }
+  },
+  
+  // Various FAF websites.
+  "URLS": {
+    // TODO: #1
+    "MUMBLE_URL": "mumble://{login}@mumble.faforever.com/Games?version:1.2.0",
+    "FORUMS_URL": "http://forums.faforever.com/forums",
+    "WEBSITE_URL": "http://www.faforever.com",
+    "UNITDB_URL": "http://faforever.com/faf/unitsDB/",
+    "GITHUB_URL": "http://www.github.com/FAForever",
+    "WIKI_URL": "http://wiki.faforever.com/mediawiki/index.php/Main_Page",
+    "SUPPORT_URL": "http://forums.faforever.com/viewforum.php?f=3",
+    "TICKET_URL": "http://forums.faforever.com/viewforum.php?f=3",
+    "STEAMLINK_URL": "http://app.faforever.com/faf/steam.php",
+    "PASSWORD_RECOVERY_URL": "http://app.faforever.com/faf/forgotPass.php",
+    "NAME_CHANGE_URL": "http://app.faforever.com/faf/userName.php"
+  }
+}
