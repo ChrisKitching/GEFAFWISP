@@ -1,5 +1,6 @@
-var app = require('app');
-var BrowserWindow = require('browser-window');
+import {app, BrowserWindow} from "electron";
+
+let mainWindow:any;
 
 app.on('window-all-closed', function () {
     if (process.platform != 'darwin') {

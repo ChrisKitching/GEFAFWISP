@@ -1,0 +1,8 @@
+{
+    "name": "gefafwisp",
+    "version": false,
+    "globalDependencies": {
+        "github-electron": "registry:dt/github-electron#1.2.4+20160622101043",
+        "node": "registry:env/node#6.0.0+20160622202520"
+    }
+}

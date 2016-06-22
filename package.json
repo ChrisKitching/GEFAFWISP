@@ -2,9 +2,10 @@
   "name": "gefafwisp",
   "version": "1.0.0",
   "description": "A FAF client that doesn't suck.",
-  "main": "main.js",
+  "main": "index.js",
   "scripts": {
-    "start": "electron .",
+    "prestart": "tsc -p browser && tsc -p node",
+    "start": "electron node",
     "postinstall": "typings install",
     "test": "mocha './test/**/*.spec.tsx' --compilers js:babel-core/register --require ignore-styles --recursive",
     "watch": "./node_modules/.bin/webpack-dev-server"
@@ -19,7 +20,7 @@
     "chai": "^3.5.0",
     "css-loader": "^0.23.1",
     "electron-packager": "^7.0.1",
-    "electron-prebuilt": "^0.37.7",
+    "electron-prebuilt": "^1",
     "enzyme": "^2.2.0",
     "ignore-styles": "^1.2.0",
     "mocha": "^2.4.5",
@@ -30,7 +31,7 @@
     "style-loader": "^0.13.1",
     "ts-loader": "^0.8.2",
     "typescript": "^1.8.10",
-    "typings": "^0.8.1",
+    "typings": "^1",
     "webpack": "^1.13.0",
     "webpack-dev-server": "^1.14.1"
   },

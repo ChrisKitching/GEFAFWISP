@@ -2,7 +2,7 @@ const webpack = require('webpack');
 const path = require('path');
 
 const PATHS = {
-    app: path.join(__dirname, 'src'),
+    app: path.join(__dirname, 'browser/src'),
     build: path.join(__dirname, 'build')
 };
 
@@ -19,7 +19,7 @@ module.exports = {
         extensions: ['', '.webpack.js', '.web.js', '.ts', '.tsx', '.js']
     },
     devServer: {
-        contentBase: './public',
+        contentBase: './browser/public',
         publicPath: 'http://localhost:8080/built/'
     },
     module: {
