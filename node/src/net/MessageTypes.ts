@@ -33,3 +33,61 @@ export interface Login extends OutboundMessage {
     // The session ID the server sent you in response to the AskSession.
     session:string;
 }
+
+
+/**
+ * Base interface for all messages we receive from the server.
+ */
+export interface InboundMessage {
+    // The type of the message.
+    command:string;
+}
+
+/**
+ * Message providing your session ID. Received in response to the client sending version information
+ * and passing the check (otherwise an Update message is sent, notifying the client that it is out
+ * of date).
+ */
+export interface Session extends InboundMessage {
+    command: "session";
+
+    // This connection's unique session ID number.
+    session: number;
+}
+
+/**
+ * Message indicating that the client is too outdated for the server's liking.
+ */
+export interface Update extends InboundMessage {
+    command: "update";
+
+    // A URL to download the newest version.
+    update: string;
+
+    // The version number of the client available at the given download link.
+    new_version: string;
+}
+
+/**
+ * Sent when authentication succeeds. The server sends you your own player info object.
+ */
+export interface Welcome extends InboundMessage {
+    command: "welcome";
+
+    // A Player object representing yourself.
+    // me: Player;
+}
+
+/**
+ * Provides information about one or more players.
+ */
+export interface PlayerInfo extends InboundMessage {
+    
+}
+
+/**
+ *
+ */
+export interface Stats extends InboundMessage {
+
+}

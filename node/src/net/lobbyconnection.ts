@@ -43,6 +43,18 @@ export class LobbyConnection extends EventEmitter {
 
     }
 
+    // Handler functions for particular message types that we process internally.
+
+    /**
+     * Handle a session message from the server. This leads to us entering the "connected" state.
+     * The next step is for the login function to be called.
+     * @param msg
+     */
+    handleSession(msg: MessageTypes.Session) {
+        // Use the session ID to get the uid (this is all we need it for).
+
+    }
+
     /**
      * Handle a message from the server. Figures out the type and emits an appropriate event (or
      * handles it internally, if appropriate).
@@ -51,6 +63,23 @@ export class LobbyConnection extends EventEmitter {
     handleMessage(msg:string) {
         console.log("Server message:");
         console.log(msg);
+
+        let json:any = JSON.parse(msg);
+
+        // Figure out which sort of message it is, create an appropriately-typed inteface from it,
+        // and emit an event (or process it internally).
+        switch (json.command) {
+            case "session":
+                this.handleSession(<MessageTypes.Session> json);
+                break;
+            case "update":
+                this.emit("update", <MessageTypes.Update> json);
+                break;
+            case "welcome":
+                this.emit("welcome", <MessageTypes.Welcome> json);
+                break;
+            // TODO: The rest of the protocol.
+        }
     }
 
     /**
