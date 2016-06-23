@@ -7,6 +7,10 @@ html, body {
   -webkit-app-region: drag;
 }
 
+button {
+  -webkit-app-region: no-drag;
+}
+
 body {
   margin: 0;
   background-color: #000000;
@@ -46,6 +50,7 @@ body {
 
 .react-tabs {
   height: 100%;
+  -webkit-app-region: no-drag;
 }
 .ReactTabs__TabList {
   position: fixed;
