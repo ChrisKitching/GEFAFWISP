@@ -1,4 +1,5 @@
 import {app, BrowserWindow} from "electron";
+import {LobbyConnection} from "./src/net/lobbyconnection";
 
 let mainWindow:any;
 
@@ -15,4 +16,9 @@ app.on('ready', function () {
     mainWindow.on('closed', function () {
         mainWindow = null;
     });
+    
+    // TODO: Maybe move.
+    let conn:LobbyConnection = new LobbyConnection();
+    conn.on("connect", () => {console.log("Buwhaha")});
+    conn.connect();
 });
