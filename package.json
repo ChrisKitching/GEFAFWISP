@@ -6,7 +6,7 @@
   "scripts": {
     "prestart": "tsc -p browser && tsc -p node",
     "start": "electron node",
-    "postinstall": "typings install",
+    "postinstall": "cd browser && typings install && cd ../node && typings install",
     "test": "mocha './test/**/*.spec.tsx' --compilers js:babel-core/register --require ignore-styles --recursive",
     "watch": "./node_modules/.bin/webpack-dev-server"
   },
@@ -19,6 +19,7 @@
     "babel-preset-react": "^6.5.0",
     "chai": "^3.5.0",
     "css-loader": "^0.23.1",
+    "devtron": "^1.2.1",
     "electron-packager": "^7.0.1",
     "electron-prebuilt": "^1",
     "enzyme": "^2.2.0",
@@ -37,7 +38,10 @@
     "iconv-lite": "^0.4.13"
   },
   "dependencies": {
+    "irc": "^0.5.0",
+    "node-irc": "0.0.3",
     "react": "^15.0.1",
-    "react-dom": "^15.0.1"
+    "react-dom": "^15.0.1",
+    "webpack-target-electron-renderer": "^0.4.0"
   }
 }

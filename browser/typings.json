@@ -6,9 +6,11 @@
         "enzyme": "registry:npm/enzyme#2.2.0+20160322031343"
     },
     "globalDependencies": {
+        "electron": "registry:env/electron#0.37.6+20160416165306",
         "mocha": "registry:dt/mocha#2.2.5+20160619032855",
         "node": "registry:env/node#6.0.0+20160622202520",
         "react": "registry:dt/react#0.14.0+20160621225615",
-        "react-dom": "registry:dt/react-dom#0.14.0+20160412154040"
+        "react-dom": "registry:dt/react-dom#0.14.0+20160412154040",
+        "react-tabs": "registry:dt/react-tabs#0.5.3+20160401123029"
     }
 }

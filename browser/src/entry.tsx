@@ -4,6 +4,6 @@ import * as ReactDOM from 'react-dom';
 import AppComponent from './components/App.tsx' 
 
 ReactDOM.render(
-    <div id="placeholder"><AppComponent name="GEFAFWISP" /></div>,
+    <AppComponent name="GEFAFWISP" />,
     document.getElementById('content')
 );
