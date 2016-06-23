@@ -18,6 +18,9 @@ body {
 }
 
 .titlebar {
+  position: fixed;
+  top: 0;
+  width: 100%;
   padding: .4em;
   height: 1.7em;
   background: salmon;
@@ -51,6 +54,7 @@ body {
 .react-tabs {
   height: 100%;
   -webkit-app-region: no-drag;
+  margin-top: 2.5em;
 }
 .ReactTabs__TabList {
   position: fixed;
