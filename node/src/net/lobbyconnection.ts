@@ -12,42 +12,19 @@ export class LobbyConnection extends EventEmitter {
     private socket:Socket;
 
     /**
-     * Convert an int to a byte array. Evil, and mostly useful for length-prefixing.
-     */
-    private toByteArray(int:number) {
-        return new Uint8Array([
-            (int & 0xff000000) >> 24,
-            (int & 0x00ff0000) >> 16,
-            (int & 0x0000ff00) >> 8,
-            (int & 0x000000ff)
-        ]);
-    }
-
-    /**
      * Send a message to the server.
      */
     send(message:MessageTypes.OutboundMessage) {
         let buf:Buffer = iconv.encode(JSON.stringify(message), 'utf16-be');
         let realLength = buf.length;
 
-        // Evil JS bit twiddling.
-        let len:Uint8Array = this.toByteArray(realLength);
-        let len4:Uint8Array = this.toByteArray(realLength + 4);
-
         // Length-prefix it. This requires us to write the four byte length into the start of the
         // array. Doing so in JS seems to be remarkably unpleasant.
         let finalBuf:Buffer = new Buffer(realLength + 8);
 
         // Omit redundant outer length value (TODO: GEFAFWISP #2)
-        finalBuf[0] = len4[0];
-        finalBuf[1] = len4[1];
-        finalBuf[2] = len4[2];
-        finalBuf[3] = len4[3];
-
-        finalBuf[4] = len[0];
-        finalBuf[5] = len[1];
-        finalBuf[6] = len[2];
-        finalBuf[7] = len[3];
+        finalBuf.writeInt32BE(realLength + 4, 0);
+        finalBuf.writeInt32BE(realLength, 4);
         buf.copy(finalBuf, 8);
 
         console.log(finalBuf.toString());
