@@ -3,12 +3,12 @@
 /**
  * Base interface for all messages we send to the server.
  */
-export interface ServerMessage {
+export interface OutboundMessage {
     // The type of the message.
     command:string;
 }
 
-export interface AskSessionMessage extends ServerMessage {
+export interface AskSessionMessage extends OutboundMessage {
     command:"ask_session";
 
     // A string identifying the version of the client.
@@ -18,7 +18,7 @@ export interface AskSessionMessage extends ServerMessage {
     user_agent:string;
 }
 
-export interface LoginMessage extends ServerMessage {
+export interface LoginMessage extends OutboundMessage {
     command:"hello";
 
     // The name of the user logging in.

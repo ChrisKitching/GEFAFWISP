@@ -26,7 +26,7 @@ export class LobbyConnection extends EventEmitter {
     /**
      * Send a message to the server.
      */
-    send(message:MessageTypes.ServerMessage) {
+    send(message:MessageTypes.OutboundMessage) {
         let buf:Buffer = iconv.encode(JSON.stringify(message), 'utf16-be');
         let realLength = buf.length;
 
@@ -69,7 +69,7 @@ export class LobbyConnection extends EventEmitter {
     /**
      * Handle a message from the server. Figures out the type and emits an appropriate event (or
      * handles it internally, if appropriate).
-     * @param str Exactly one json message fromthe server.
+     * @param msg Exactly one json message fromthe server.
      */
     handleMessage(msg:string) {
         console.log("Server message:");
