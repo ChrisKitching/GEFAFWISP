@@ -73,13 +73,13 @@ export class LobbyConnection extends EventEmitter {
     handleMessage(msg:string) {
         console.error("Server message:");
         console.error(msg);
-        let json:any;
-        try {
-            json = JSON.parse(msg);
-        } catch(err) {
-            console.error(err);
+
+        // Ridiculous special case for the "PING" message.
+        if (msg == "PING") {
             return;
         }
+
+        let json:any = JSON.parse(msg);
 
         // Figure out which sort of message it is, create an appropriately-typed inteface from it,
         // and emit an event (or process it internally).
