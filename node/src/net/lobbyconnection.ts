@@ -108,7 +108,7 @@ export class LobbyConnection extends EventEmitter {
         this.socket.connect(config.SERVERS.LOBBY.PORT, config.SERVERS.LOBBY.HOST);
         this.socket.on("connect", () => {
             // The version check and session acquisition message.
-            this.send(<MessageTypes.AskSessionMessage> {
+            this.send(<MessageTypes.AskSession> {
                 "command": "ask_session",
                 "version": config.VERSION,
                 "user_agent": "faf-client"
