@@ -1,5 +1,6 @@
 // Interfaces for all message types we send to the FAF server.
 
+
 /**
  * Base interface for all messages we send to the server.
  */
@@ -31,6 +32,154 @@ export interface Login extends OutboundMessage {
     unique_id:string;
 }
 
+/**
+ * Used to remove a friend or foe. Set either the friend or foe field. If both are set, the behaviour
+ * of the server is undefined.
+ */
+export interface SocialRemove extends OutboundMessage {
+    command: "social_remove";
+
+    friend?: number;
+    foe?: number;
+}
+
+/**
+ * Used to add a friend or foe. Set either the friend or foe field. If both are set, the behaviour
+ * of the server is undefined.
+ */
+export interface SocialAdd extends OutboundMessage {
+    command: "social_add";
+
+    friend?: number;
+    foe?: number;
+}
+
+/**
+ * Administrative actions. If the logged in user does not have the correct authority, bad things
+ * will occur.
+ */
+export interface Admin extends OutboundMessage {
+    command: "admin";
+
+    // The action to take. Which other fields are necessary depends on the action.
+    //
+    // Currently supported actions:
+    // closelobby: Terminate a player's FAF client.
+    // closeFA: Terminate a player's FA game.
+    // requestavatars: TODO
+    // add_avatar:
+    // remove_avatar:
+    // requestavatars
+    // join_channel:
+    //
+    action: string;
+
+    // The user to apply a user-specific action to.
+    user_id?: number;
+
+    // ... Multiple users...
+    user_ids?: number[];
+
+    // For join_channel, the name of the channel to join.
+    channel?: string;
+
+    // The avatar to apply an action to, if applicable.
+    avatar_id?: number;
+}
+
+/**
+ * Get the list of avatars available to this user.
+ */
+export interface ListAvatar extends OutboundMessage {
+    command: "list_avatar";
+}
+
+/**
+ * Set the user's avatar to a specific one.
+ */
+export interface SelectAvatar extends OutboundMessage {
+    command: "select_avatar";
+
+    // URL of the avatar to select.
+    avatar: string;
+}
+
+/**
+ * Request to join a custom game.
+ */
+export interface JoinGame extends OutboundMessage {
+    command: "game_join";
+
+    // The id of the game to join. TODO: Dat name though.
+    uid: number;
+
+    // TODO: document.
+    gameport: number;
+
+    // The password you're giving to join this game. Necessary if the game has a password, otherwise
+    // ignored.
+    password?: string;
+
+    // TODO: Document.
+    relay_address: string;
+}
+
+type Visibility = "friends" | "public";
+
+/**
+ * Request to host a custom game.
+ */
+export interface HostGame extends OutboundMessage {
+    command: "game_host";
+
+    // TODO: document.
+    relay_address: string;
+
+    // Name of the game.
+    title: string;
+
+    gameport: number;
+
+    // Is this game visible to everyone or just friends?
+    visibility: Visibility;
+
+    // The featured mod for this game.
+    mod: string;
+
+    // The initial map for this game. TODO: Deprecated?
+    mapname: string;
+
+    // TODO: Make optional?
+    password: string;
+}
+
+/**
+ * Request to be added to the ladder matchmaker.
+ */
+export interface JoinLadder extends OutboundMessage {
+    command: "game_matchmaking"; // TODO: Dat identifier.
+
+
+}
+
+/**
+ * Request for the list of coop maps.
+ */
+export interface CoopList extends OutboundMessage {
+    command: "coop_list";
+}
+
+/**
+ * Create a new user account.
+ */
+export interface CreateAccount extends OutboundMessage {
+    command: "create_account";
+
+    // The desired username.
+    login: string;
+    email: string;
+    password: string;
+}
 
 /**
  * Base interface for all messages we receive from the server.
@@ -76,10 +225,69 @@ export interface Welcome extends InboundMessage {
 }
 
 /**
+ * What the server sends you of a player in a player_info message (oddly enough, this is not all the
+ * fields of an actual player object, hence the split :/. And some of the names are silly.
+ */
+export interface ServerPlayer {
+    id: number;
+    login: string;
+    global_rating: [number, number];
+    ladder_rating: [number, number];
+    number_of_games: number;
+    avatar: string;
+    country: string;
+    clan: string;
+}
+
+/**
  * Provides information about one or more players.
  */
 export interface PlayerInfo extends InboundMessage {
-    
+    command: "player_info";
+
+    players: ServerPlayer[];
+}
+
+/**
+ * Represents a featured mod notification message. A slew of these is sent on login to tell you
+ * about all the featured mods (but never thereafter).
+ * It would be sensible to make these all be done as one message...
+ */
+export interface ModInfo extends InboundMessage {
+    command: "mod_info";
+
+    // The name of the new featured mod.
+    name: string;
+
+    // Some HTML that describes the mod, for display in the UI.
+    desc: string;
+
+    // A sort key.
+    order: number;
+
+    fullname: string;
+    publish: number;
+}
+
+/**
+ * Slightly annoying message sent by the server to
+ */
+export interface Social extends InboundMessage {
+    command: "social";
+
+    // A list of IRC channels the server wants us to automatically join.
+    autojoin: string[];
+
+    // TODO: ... something?
+    channels: string[];
+
+    // Lists of user IDs for our friends/foes.
+    friends: number[];
+    foes: number[];
+}
+
+export interface Avatar extends InboundMessage {
+    command: "avatar"
 }
 
 /**
