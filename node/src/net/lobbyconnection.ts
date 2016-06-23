@@ -109,7 +109,6 @@ export class LobbyConnection extends EventEmitter {
      */
     connect() {
         this.socket = new Socket();
-        this.socket.setEncoding(null);
         this.socket.setKeepAlive(true);
         this.socket.connect(config.SERVERS.LOBBY.PORT, config.SERVERS.LOBBY.HOST);
         this.socket.on("connect", () => {
