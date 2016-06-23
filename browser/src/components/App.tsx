@@ -1,4 +1,3 @@
-import "../styles/Hello.scss";
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import * as React from "react";
 import ChatComponent from "./Chat.tsx";
