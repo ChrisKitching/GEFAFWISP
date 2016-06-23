@@ -11,6 +11,7 @@ app.on('ready', function () {
         width: 1000,
         height: 700,
         center: true,
+        frame: false,
         title: "Forged Alliance Forever"
     });
     mainWindow.loadURL('file://' + __dirname + '/public/index.html');
