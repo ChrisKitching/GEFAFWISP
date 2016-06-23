@@ -1,4 +1,6 @@
 import {EventEmitter} from "events";
+import {execSync} from "child_process";
+import {createHash} from "crypto";
 import {config} from "../config";
 import * as MessageTypes from "./MessageTypes";
 import {Socket} from "net";
@@ -10,11 +12,14 @@ var iconv = require('iconv-lite');
  */
 export class LobbyConnection extends EventEmitter {
     private socket:Socket;
+    private uid:string;
 
     /**
      * Send a message to the server.
      */
     send(message:MessageTypes.OutboundMessage) {
+        console.log("Sending: " + JSON.stringify(message));
+
         let buf:Buffer = iconv.encode(JSON.stringify(message), 'utf16-be');
         let realLength = buf.length;
 
@@ -27,8 +32,6 @@ export class LobbyConnection extends EventEmitter {
         finalBuf.writeInt32BE(realLength, 4);
         buf.copy(finalBuf, 8);
 
-        console.log(finalBuf.toString());
-
         // This utf-8 encodes the string.
         this.socket.write(finalBuf);
     }
@@ -40,7 +43,13 @@ export class LobbyConnection extends EventEmitter {
      * @param password (in plaintext)
      */
     login(username:string, password:string) {
-
+        let hashed:string = createHash('sha256').update(password, 'utf8').digest('hex');
+        this.send(<MessageTypes.Login> {
+            "command": "hello",
+            "login": username,
+            "password": hashed,
+            "unique_id": this.uid
+        })
     }
 
     // Handler functions for particular message types that we process internally.
@@ -52,7 +61,8 @@ export class LobbyConnection extends EventEmitter {
      */
     handleSession(msg: MessageTypes.Session) {
         // Use the session ID to get the uid (this is all we need it for).
-
+        this.uid = execSync("./bin/uid " + msg.session).toString();
+        this.emit("connect");
     }
 
     /**
@@ -61,10 +71,15 @@ export class LobbyConnection extends EventEmitter {
      * @param msg Exactly one json message fromthe server.
      */
     handleMessage(msg:string) {
-        console.log("Server message:");
-        console.log(msg);
-
-        let json:any = JSON.parse(msg);
+        console.error("Server message:");
+        console.error(msg);
+        let json:any;
+        try {
+            json = JSON.parse(msg);
+        } catch(err) {
+            console.error(err);
+            return;
+        }
 
         // Figure out which sort of message it is, create an appropriately-typed inteface from it,
         // and emit an event (or process it internally).
@@ -84,11 +99,11 @@ export class LobbyConnection extends EventEmitter {
 
     /**
      * Unpack a message bundle from the server and pass the parts to handleMessage.
-     * @param str The message bundle from the server.
+     * @param buf The message bundle from the server.
      */
-    unpackMessages(str:string) {
-        let buf = Buffer.from(str);
-        console.log(buf);
+    unpackMessages(buf:Buffer) {
+        // console.error("Unpack: " + buf.toString());
+        console.error("Buflen: " + buf.length);
 
         let offset = 0;
 
@@ -96,10 +111,58 @@ export class LobbyConnection extends EventEmitter {
         while (offset < buf.length) {
             // Extract the next message and process it.
             let msgLength = buf.readInt32BE(offset);
+            console.error("Message of length: " + msgLength);
             offset += 4;
-            this.handleMessage(buf.toString("utf-8", offset, offset+msgLength));
+
+            // Extract the payload string.
+            let utf16Buffer:Buffer = buf.slice(offset, offset + msgLength);
+
+            // Decode it as utf16-be and pass it to the actual handlers.
+            if (buf.length > 100000) {
+                console.error(buf.toString());
+                console.error("-----------END OF BLOCK---------");
+
+            } else {
+                this.handleMessage(iconv.decode(utf16Buffer, 'utf16-be'));
+            }
             offset += msgLength;
         }
+    }
+
+    /**
+     * Read exactly length bytes from socket. If there are not that many bytes available to be read,
+     * return null.
+     *
+     * Just to keep life interesting, the default behaviour of Socket is to sometimes return more
+     * than you ask for. This can cause all kinds of badness.
+     *
+     * @param socket Socket to read from.
+     * @param length Number of bytes to read.
+     */
+    readExactly(socket:Socket, length:number):Buffer {
+        // There is a hole in the type system here: typings say this returns a Buffer, but sometimes
+        // it's a string (or null).
+        let stuffRead:any = this.socket.read(length);
+
+        // Null is returned by the socket if there are not enough bytes.
+        if (stuffRead == null) {
+            return null;
+        }
+
+        // Now we have _at least_ length many bytes in the buffer stuffRead. Let's now, hilariously,
+        // put back the extra ones.
+        let block:Buffer = new Buffer(stuffRead);
+
+        let extraBuf = block.slice(length);
+        socket.unshift(extraBuf);
+        //
+        // if (length < 10) {
+        //     console.error("Read " + length + ": " + block.slice(0, length));
+        // } else {
+        //     console.error("Read " + length + ": " + block.slice(0, length).toString());
+        // }
+
+        return block.slice(0, length);
     }
 
     /**
@@ -108,9 +171,11 @@ export class LobbyConnection extends EventEmitter {
      * prepared to talk to before we send any events to the user and start trying to do things.
      */
     connect() {
+        // TODO: UTF-8-ify.
         this.socket = new Socket();
         this.socket.setKeepAlive(true);
         this.socket.connect(config.SERVERS.LOBBY.PORT, config.SERVERS.LOBBY.HOST);
+        this.socket.pause();
         this.socket.on("connect", () => {
             // The version check and session acquisition message.
             this.send(<MessageTypes.AskSession> {
@@ -120,12 +185,33 @@ export class LobbyConnection extends EventEmitter {
             })
         });
 
-        // TODO: UTF-8-ify.
+        // Length remaining to extract from this block.
+        let lengthToRead = -1;
+        this.socket.on('readable', () => {
+            // console.error("Paused: " + this.socket.)
+            if (lengthToRead == -1) {
+                // Check if there are enough bytes yet...
+                let lengthBuffer:Buffer = this.readExactly(this.socket, 4);
+                if (lengthBuffer == null) {
+                    return;
+                }
 
-        // We stream the socket into a decoder, which emits a data event every time a complete
-        // string is found.
-        var converterStream = iconv.decodeStream('utf16-be');
-        this.socket.pipe(converterStream);
-        converterStream.on('data', (data:string) => {this.unpackMessages(data)});
+                lengthToRead = lengthBuffer.readUInt32BE(0);
+                console.error("Block length: " + lengthToRead);
+            }
+
+            console.error("Length to read: " + lengthToRead);
+
+            // Wait for enough bytes...
+            let block:Buffer = this.readExactly(this.socket, lengthToRead);
+            if (block == null) {
+                return;
+            }
+
+            console.error("Finally read: " + block.length);
+
+            lengthToRead = -1;
+            this.unpackMessages(block);
+        });
     }
 }

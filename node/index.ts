@@ -20,8 +20,11 @@ app.on('ready', function () {
   });
 
   // TODO: Maybe move.
-  let conn: LobbyConnection = new LobbyConnection();
-  conn.on("connect", () => {console.log("Buwhaha")});
+  let conn:LobbyConnection = new LobbyConnection();
+  conn.on("connect", () => {
+    // TODO: Hack for testing.
+    conn.login("USERNAME", "PASSWORD");
+  });
   conn.connect();
 
   ircClient = new IrcClient('Sheeo_1', ['#test_derp'], mainWindow.webContents);
