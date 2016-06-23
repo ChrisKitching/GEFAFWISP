@@ -71,8 +71,7 @@ export class LobbyConnection extends EventEmitter {
      * @param msg Exactly one json message fromthe server.
      */
     handleMessage(msg:string) {
-        console.error("Server message:");
-        console.error(msg);
+        console.log("Server message: " + msg);
 
         // Ridiculous special case for the "PING" message.
         if (msg == "PING") {
@@ -106,9 +105,6 @@ export class LobbyConnection extends EventEmitter {
      * @param buf The message bundle from the server.
      */
     unpackMessages(buf:Buffer) {
-        // console.error("Unpack: " + buf.toString());
-        console.error("Buflen: " + buf.length);
-
         let offset = 0;
 
         // Assumes a whole number of messages have been received.
@@ -122,13 +118,8 @@ export class LobbyConnection extends EventEmitter {
             let utf16Buffer:Buffer = buf.slice(offset, offset + msgLength);
 
             // Decode it as utf16-be and pass it to the actual handlers.
-            if (buf.length > 100000) {
-                console.error(buf.toString());
-                console.error("-----------END OF BLOCK---------");
+            this.handleMessage(iconv.decode(utf16Buffer, 'utf16-be'));
 
-            } else {
-                this.handleMessage(iconv.decode(utf16Buffer, 'utf16-be'));
-            }
             offset += msgLength;
         }
     }
@@ -159,12 +150,6 @@ export class LobbyConnection extends EventEmitter {
 
         let extraBuf = block.slice(length);
         socket.unshift(extraBuf);
-        //
-        // if (length < 10) {
-        //     console.error("Read " + length + ": " + block.slice(0, length));
-        // } else {
-        //     console.error("Read " + length + ": " + block.slice(0, length).toString());
-        // }
 
         return block.slice(0, length);
     }
@@ -201,18 +186,13 @@ export class LobbyConnection extends EventEmitter {
                 }
 
                 lengthToRead = lengthBuffer.readUInt32BE(0);
-                console.error("Block length: " + lengthToRead);
             }
-
-            console.error("Length to read: " + lengthToRead);
 
             // Wait for enough bytes...
             let block:Buffer = this.readExactly(this.socket, lengthToRead);
             if (block == null) {
                 return;
             }
-
-            console.error("Finally read: " + block.length);
 
             lengthToRead = -1;
             this.unpackMessages(block);
