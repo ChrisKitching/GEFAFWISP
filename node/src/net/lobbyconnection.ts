@@ -93,6 +93,10 @@ export class LobbyConnection extends EventEmitter {
             case "welcome":
                 this.emit("welcome", <MessageTypes.Welcome> json);
                 break;
+            case "player_info":
+                this.emit("player_info", <MessageTypes.PlayerInfo> json);
+                break;
+                    
             // TODO: The rest of the protocol.
         }
     }
