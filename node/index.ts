@@ -6,7 +6,12 @@ let mainWindow: Electron.BrowserWindow;
 let ircClient: IrcClient;
 
 app.on('ready', function () {
-  mainWindow = new BrowserWindow({width: 1000, height: 700});
+  mainWindow = new BrowserWindow({
+    width: 1000,
+    height: 700,
+    center: true,
+    title: "Forged Alliance Forever"
+  });
   mainWindow.loadURL('file://' + __dirname + '/public/index.html');
   (mainWindow as any).openDevTools();
   
