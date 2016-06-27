@@ -35,7 +35,7 @@ var options = {
                 include: PATHS.app
             },
             {
-                test: /\.tsx$/,
+                test: /\.tsx?$/,
                 loaders: ['ts-loader'],
                 include: PATHS.app
             }
