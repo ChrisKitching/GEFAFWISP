@@ -43,16 +43,16 @@ class GameTab extends React.Component<GameTabProps, GameTabState> {
 
             {/* Ladder join buttons. */}
             <div className="btn-group" data-toggle="buttons">
-                <label className="btn btn-primary">
+                <label className="btn btn-default">
                     <input type="checkbox"/><img src="img/factions/uef.png"/>
                 </label>
-                <label className="btn btn-primary">
+                <label className="btn btn-default">
                     <input type="checkbox"/><img src="img/factions/cybran.png"/>
                 </label>
-                <label className="btn btn-primary">
+                <label className="btn btn-default">
                     <input type="checkbox"/><img src="img/factions/aeon.png"/>
                 </label>
-                <label className="btn btn-primary">
+                <label className="btn btn-default">
                     <input type="checkbox"/><img src="img/factions/seraphim.png"/>
                 </label>
             </div>
@@ -68,7 +68,7 @@ class GameTab extends React.Component<GameTabProps, GameTabState> {
                     // Not all mods are to be shown in the UI...
                     .filter((mod) => mod.publish == 1)
                     .map(function(listValue) {
-                        return <li className="list-group-item list-group-item-warning"><FeaturedMod mod={listValue}/></li>;
+                        return <li href="#" key={listValue.name} className="list-group-item"><FeaturedMod mod={listValue}/></li>;
                     }
                 )}
             </ul>
