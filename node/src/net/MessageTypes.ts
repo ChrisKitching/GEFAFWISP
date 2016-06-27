@@ -269,6 +269,53 @@ export interface ModInfo extends InboundMessage {
     publish: number;
 }
 
+export interface GameInfo extends InboundMessage {
+    command: "game_info";
+
+    // A string that maps to one of the Visibility enum values in the model.
+    visibility: string;
+
+    // True iff the game is password protected.
+    password_protected: boolean;
+
+    // The ID of the game.
+    uid: number;
+
+    // The name of the game.
+    title: string;
+
+    // A string that maps to one of the game state enum values.
+    state: string;
+
+    // The name of the featured mod used for this game.
+    featured_mod: string;
+
+    // The ZePatcher version information for every file used by this game.
+    // Yes. Really.
+    // The keys are the ids of the files, the values are their ZePatcher version number.
+    featured_mod_versions: Map<number, number>;
+
+    // Any other sim mods that are enabled. Keys are mod UID, values are mod pretty name for display.
+    sim_mods: Map<string, string>;
+
+    // The name/path of the map.
+    mapname: string;
+    map_file_path: string;
+
+    // The name of the host player
+    // TODO: WHY ISN'T THIS THE ID?!
+    host: string;
+
+    // Number of players in and capacity of the game.
+    num_players: number;
+    max_players: number;
+
+    // Which players are in which teams.
+    // Maps team number to lists of usernames TODO: USE IDS YOU PRUNE.
+    // Team 1 is the FFA team. This shoudld be desugared into separate teams, really.
+    teams: Map<number, string[]>;
+}
+
 /**
  * Slightly annoying message sent by the server to
  */
