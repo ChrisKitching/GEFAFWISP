@@ -33,6 +33,10 @@ app.on('ready', function () {
         // TODO:
     });
 
+    conn.on("mod_info", (msg: MessageTypes.ModInfo) => {
+        mainWindow.webContents.send('mod_info', msg);
+    });
+
     conn.connect();
 
     ircClient = new IrcClient('Sheeo_1', ['#test_derp'], mainWindow.webContents);

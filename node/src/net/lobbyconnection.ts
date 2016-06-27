@@ -95,7 +95,10 @@ export class LobbyConnection extends EventEmitter {
             case "player_info":
                 this.emit("player_info", <MessageTypes.PlayerInfo> json);
                 break;
-                    
+            case "mod_info":
+                this.emit("mod_info", <MessageTypes.ModInfo> json);
+                break;
+
             // TODO: The rest of the protocol.
         }
     }
@@ -111,7 +114,6 @@ export class LobbyConnection extends EventEmitter {
         while (offset < buf.length) {
             // Extract the next message and process it.
             let msgLength = buf.readInt32BE(offset);
-            console.error("Message of length: " + msgLength);
             offset += 4;
 
             // Extract the payload string.

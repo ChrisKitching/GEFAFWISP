@@ -4,14 +4,21 @@ import 'bootstrap';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import * as React from "react";
 import ChatComponent from "./Chat.tsx";
+import GameTab from "./GameTab.tsx";
+import {FeaturedModsModel} from "../model/FeaturedModsService";
 
 interface AppProps {
     name: string
 }
 
 class AppComponent extends React.Component<AppProps, {}> {
+    // Model holding the state of the set of featured mods.
+    modModel:FeaturedModsModel;
+
     constructor(props: AppProps) {
         super(props);
+
+        this.modModel = new FeaturedModsModel();
     }
     handleSelect(index: number, last: number) {
         console.log(`Switching to tab ${index} from ${last}`);
@@ -40,7 +47,9 @@ class AppComponent extends React.Component<AppProps, {}> {
                         <ChatComponent></ChatComponent>
                     </TabPanel>
                     <TabPanel></TabPanel>
-                    <TabPanel></TabPanel>
+                    <TabPanel>
+                        <GameTab modModel={this.modModel}/>
+                    </TabPanel>
                     <TabPanel></TabPanel>
                     <TabPanel></TabPanel>
                     <TabPanel></TabPanel>
