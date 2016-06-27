@@ -2,7 +2,7 @@ import * as React from 'react';
 import {ipcRenderer} from 'electron';
 import {ModInfo} from "../../../node/src/net/MessageTypes";
 import FeaturedMod from "./FeaturedMod.tsx";
-import {FeaturedModsModel} from "../model/FeaturedModsService";
+import {FeaturedModsModel} from "../model/FeaturedModsModel";
 
 interface GameTabProps {
     modModel: FeaturedModsModel;

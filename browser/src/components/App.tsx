@@ -5,7 +5,7 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import * as React from "react";
 import ChatComponent from "./Chat.tsx";
 import GameTab from "./GameTab.tsx";
-import {FeaturedModsModel} from "../model/FeaturedModsService";
+import {FeaturedModsModel} from "../model/FeaturedModsModel";
 
 interface AppProps {
     name: string
