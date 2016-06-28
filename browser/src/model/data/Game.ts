@@ -1,8 +1,8 @@
-import {GameInfo} from "../../../../node/src/net/MessageTypes";
+import {ServerGame} from "../../../../node/src/net/MessageTypes";
 import {PlayerService} from "../PlayerService";
 
 /**
- * Represents the visibility states of a game. PUBLIC is visibile to everyone, FRIENDS is visible to
+ * Represents the visibility states of a game. PUBLIC is visible to everyone, FRIENDS is visible to
  * friends only.
  * This may be used to hint that you are seeing a specific game for some interesting reason.
  *
@@ -22,6 +22,7 @@ type GameState =
 
     // A game that is not presently joinable, for reasons of being in the middle of its
     // initialisation or having finished.
+    // We ignore games in this state.
     "closed";
 function isGameState(s:string): s is GameState {
     return s == "open" || s == "playing" || s == "closed";
@@ -30,7 +31,7 @@ function isGameState(s:string): s is GameState {
 /**
  * Represents a game, can be constructed from a game_info object.
  */
-class Game {
+export class Game {
     visibility: Visibility;
 
     // True iff the game is password protected.
@@ -74,7 +75,14 @@ class Game {
      * @param gameInfo A game_info message from the server.
      * @param ps The player service, used only while the server dumbly sends us names.
      */
-    constructor(gameInfo:GameInfo, ps: PlayerService) {
+    constructor(gameInfo:ServerGame, ps: PlayerService) {
+        this.update(gameInfo, ps);
+    }
+
+    /**
+     * Update to match the given ServerGame.
+     */
+    update(gameInfo:ServerGame, ps:PlayerService) {
         if (isVisibility(gameInfo.visibility)) {
             this.visibility = <Visibility> gameInfo.visibility;
         } else {
@@ -115,7 +123,7 @@ class Game {
 
         // Annoyingly enough, foreach's argument takes value, then key.
         serverTeams.forEach((players: string[], teamNum: number) => {
-            ret[teamNum] = players.map((playerName:string) => ps.byName(playerName).id);
+            ret.set(teamNum, players.map((playerName:string) => ps.byName(playerName).id));
 
             // The maximum used team ID is handy for the FFA team desugaring step.
             maxTeam = Math.max(teamNum, maxTeam);
@@ -123,10 +131,10 @@ class Game {
 
         // Desgar team 1 into a series of single-element teams.
         let newTeam = maxTeam + 1;
-        let FFATeam: number[] = ret[1];
+        let FFATeam: number[] = ret.get(1);
         ret.delete(1);
 
-        FFATeam.forEach((playerId:number) => ret[newTeam++] = [playerId]);
+        FFATeam.forEach((playerId:number) => ret.set(newTeam++, [playerId]));
 
         return ret;
     }

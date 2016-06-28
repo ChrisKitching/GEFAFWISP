@@ -37,6 +37,14 @@ export class Player {
      * all of the state).
      */
     constructor(p:ServerPlayer) {
+        this.update(p);
+    }
+
+    /**
+     * Update the state to match the given ServerPlayer.
+     * @param p
+     */
+    update(p:ServerPlayer) {
         this.id = p.id;
         this.name = p.login;
         this.globalRating = p.global_rating;

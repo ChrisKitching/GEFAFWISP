@@ -29,8 +29,8 @@ export class PlayerService extends EventEmitter {
         this.playersByName = new Map<string, Player>();
 
         // Listen to server player info messages.
-        ipcRenderer.on('player_info', (event, msg:PlayerInfo) => {
-            for (let player:ServerPlayer of msg.players) {
+        ipcRenderer.on('player_info', (event: any, msg:PlayerInfo) => {
+            for (let player of msg.players) {
                 this.handlePlayerInfo(player);
             }
         });
@@ -38,7 +38,7 @@ export class PlayerService extends EventEmitter {
         // Listen to social messages to update the friend/foe lists. This only happens once. Once
         // we're up and running, mutation does not lead to a new message, we have to do that
         // ourselves.
-        ipcRenderer.on('social', (event, msg:Social) => {
+        ipcRenderer.on('social', (event: any, msg:Social) => {
             msg.friends.forEach((id: number) => this.friends.add(id));
             msg.foes.forEach((id: number) => this.foes.add(id));
         });
@@ -48,14 +48,12 @@ export class PlayerService extends EventEmitter {
         // Could be a new player, or an update for any subset of the fields of an existing one.
         if (this.players.has(p.id)) {
             // It's an update: merge the objects.
-            for (let key in p) {
-                this.players[p.id][key] = p[key];
-            }
+            this.players.get(p.id).update(p);
         } else {
             // A new player.
             let newPlayer:Player = new Player(p);
-            this.players[p.id] = newPlayer;
-            this.playersByName[p.login] = newPlayer;
+            this.players.set(p.id, newPlayer);
+            this.playersByName.set(p.login, newPlayer);
         }
     }
 
@@ -71,7 +69,7 @@ export class PlayerService extends EventEmitter {
      * @param name
      */
     byName(name: string): Player {
-        return this.playersByName[name];
+        return this.playersByName.get(name);
     }
 
     /**
@@ -79,7 +77,7 @@ export class PlayerService extends EventEmitter {
      * @param id
      */
     byId(id: number): Player {
-        return this.players[id];
+        return this.players.get(id);
     }
 
     isFriend(id: number) {

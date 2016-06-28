@@ -1,6 +1,7 @@
 // Interfaces for all message types we send to the FAF server.
 
 
+import {Rating} from "../../../browser/src/model/data/Player";
 /**
  * Base interface for all messages we send to the server.
  */
@@ -231,8 +232,8 @@ export interface Welcome extends InboundMessage {
 export interface ServerPlayer {
     id: number;
     login: string;
-    global_rating: [number, number];
-    ladder_rating: [number, number];
+    global_rating: Rating;
+    ladder_rating: Rating;
     number_of_games: number;
     avatar: string;
     country: string;
@@ -269,9 +270,7 @@ export interface ModInfo extends InboundMessage {
     publish: number;
 }
 
-export interface GameInfo extends InboundMessage {
-    command: "game_info";
-
+export interface ServerGame {
     // A string that maps to one of the Visibility enum values in the model.
     visibility: string;
 
@@ -312,8 +311,14 @@ export interface GameInfo extends InboundMessage {
 
     // Which players are in which teams.
     // Maps team number to lists of usernames TODO: USE IDS YOU PRUNE.
-    // Team 1 is the FFA team. This shoudld be desugared into separate teams, really.
+    // Team 1 is the FFA team. This should be desugared into separate teams, really.
     teams: Map<number, string[]>;
+}
+
+export interface GameInfo extends InboundMessage {
+    command: "game_info";
+
+    games: ServerGame[];
 }
 
 /**
