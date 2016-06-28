@@ -1,5 +1,6 @@
 import {ServerGame} from "../../../../node/src/net/MessageTypes";
 import {PlayerService} from "../PlayerService";
+import {Player} from "./Player";
 
 /**
  * Represents the visibility states of a game. PUBLIC is visible to everyone, FRIENDS is visible to
@@ -57,9 +58,8 @@ export class Game {
     mapName: string;
     mapPath: string;
 
-    // The id of the host player
-    // TODO: WHY ISN'T THIS THE ID?!
-    host: number;
+    // The host player
+    host: Player;
 
     // Number of players in and capacity of the game.
     numPlayers: number;
@@ -105,7 +105,7 @@ export class Game {
         this.simMods = gameInfo.sim_mods;
         this.mapName = gameInfo.mapname;
         this.mapPath = gameInfo.map_file_path;
-        this.host = ps.byName(gameInfo.host).id;
+        this.host = ps.byName(gameInfo.host);
         this.teams = this.desugarTeams(gameInfo.teams, ps);
     }
 
