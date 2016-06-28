@@ -16,7 +16,7 @@ class FeaturedMod extends React.Component<FeaturedModProps, {}> {
     render() {
         return (
             <div>
-                <img src={"./img/modIcons/" + this.props.mod.name + ".png"}/> {this.props.mod.fullname}
+                <img width="32" height="32" src={"./img/modIcons/" + this.props.mod.name + ".png"}/> {this.props.mod.fullname}
             </div>
         );
     }
