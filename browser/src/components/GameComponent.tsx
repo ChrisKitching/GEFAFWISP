@@ -20,9 +20,12 @@ class GameComponent extends React.Component<GameProps, {}> {
             "margin-right":"10px"
         };
 
+        let previewUrl:string = "http://content.faforever.com/faf/vault/map_previews/small/" + this.props.game.mapName + ".png"
+
         return (
+
             <div className="gameComponent">
-                <img style={imgFloat} src="img/gameListIcons/private_game.png"/>
+                <img style={imgFloat} src={previewUrl}/>
                 <h5><b>{this.props.game.name}</b></h5>
                 <small>on map <b>{this.props.game.mapName}</b></small><br/>
                 <small>with <b>{this.props.game.numPlayers} / {this.props.game.maxPlayers}</b> players</small><br/>
