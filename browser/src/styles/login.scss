@@ -11,10 +11,6 @@ body {
   background-size: contain;
 }
 
-button {
-  -webkit-app-region: no-drag;
-}
-
 form {
   padding: 10px;
   background-color: rgba(0, 0, 0, 0.7);
@@ -37,16 +33,11 @@ form {
   width:100%;
 }
 
+// Used briefly when the password/username are incorrect.
+.angry-form-control {
+  border-color: #ff0000;
+}
+
 .theRow {
   height:100%;
-}
-
-.sm {
-  height: 3em;
-  border: 1px solid #F00;
-}
-
-.bg {
-  height: 10em;
-  border: 1px solid #000;
 }
