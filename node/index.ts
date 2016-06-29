@@ -8,6 +8,27 @@ let mainWindow:Electron.BrowserWindow;
 let ircClient:IrcClient;
 
 /**
+ * Ensure only one GEFAFWISP instance is running.
+ */
+function ensureSingleInstance() {
+    // The callback runs in the primary process if a second copy is running.
+    if (app.makeSingleInstance((cmd, wDir) => {
+        // This is called in the older of the two processes when someone tries to open GEFAFWISP
+        // when it is already running.
+        if (mainWindow.isMinimized()) {
+            mainWindow.restore();
+        }
+
+        mainWindow.focus();
+    })) {
+        // If we get here, another instance of GEFAFWISP is running, and we should stop. The other
+        // branch has been triggered in the other application.
+        app.quit();
+        return;
+    }
+}
+
+/**
  * Returns true if a username/password is saved. If not, we need to show the login screen at once.
  */
 function haveSavedCredentials() {
@@ -77,6 +98,9 @@ function connectToIRC() {
 }
 
 app.on('ready', function () {
+    // Abort if GEFAFWISP is already running.
+    ensureSingleInstance();
+
     Config.load();
     createUI();
 
