@@ -2,6 +2,8 @@ import 'jquery';
 import 'bootstrap';
 
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import {ipcRenderer} from 'electron';
+import * as MessageTypes from "../../../node/src/net/MessageTypes";
 import * as React from "react";
 import ChatComponent from "./Chat.tsx";
 import GameTab from "./GameTab.tsx";
@@ -26,7 +28,12 @@ class AppComponent extends React.Component<AppProps, {}> {
 
         this.playerService = new PlayerService();
         this.modModel = new FeaturedModsModel();
-        this.gameModel = new GameModel(this.playerService)
+        this.gameModel = new GameModel(this.playerService);
+
+        // Listen for the availability of the "Me" object.
+        ipcRenderer.on('welcome', (event:any, msg: MessageTypes.Welcome) => {
+            this.playerService.setMe(msg.me);
+        });
     }
     handleSelect(index: number, last: number) {
         console.log(`Switching to tab ${index} from ${last}`);
