@@ -21,7 +21,7 @@ interface LoginState {
  */
 class LoginComponent extends React.Component<LoginProps, LoginState> {
     // Used to trigger the removal of the redness from the UI.
-    angryTimer: number;
+    angryTimer: any;
 
     constructor(props: LoginProps) {
         super();
