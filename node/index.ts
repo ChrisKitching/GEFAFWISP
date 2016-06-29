@@ -14,7 +14,7 @@ app.on('ready', function () {
         frame: false,
         title: "Forged Alliance Forever"
     });
-    mainWindow.loadURL('file://' + __dirname + '/public/index.html');
+    mainWindow.loadURL('file://' + __dirname + '/../browser/public/index.html');
     (mainWindow as any).openDevTools();
 
     mainWindow.on('closed', function () {
