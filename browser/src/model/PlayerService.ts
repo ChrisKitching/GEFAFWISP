@@ -20,9 +20,8 @@ export class PlayerService extends EventEmitter {
     private friends: Set<number>;
     private foes: Set<number>;
 
-    constructor(aMe: Player) {
+    constructor() {
         super();
-        this.me = aMe;
         this.friends = new Set<number>();
         this.foes = new Set<number>();
         this.players = new Map<number, Player>();
@@ -42,6 +41,10 @@ export class PlayerService extends EventEmitter {
             msg.friends.forEach((id: number) => this.friends.add(id));
             msg.foes.forEach((id: number) => this.foes.add(id));
         });
+    }
+
+    setMe(aMe:Player) {
+        this.me = aMe;
     }
 
     private handlePlayerInfo(p:ServerPlayer): void {

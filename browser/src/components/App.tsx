@@ -6,6 +6,9 @@ import * as React from "react";
 import ChatComponent from "./Chat.tsx";
 import GameTab from "./GameTab.tsx";
 import {FeaturedModsModel} from "../model/FeaturedModsModel";
+import {PlayerService} from "../model/PlayerService";
+import {GameModel} from "../model/GameModel";
+import {Player} from "../model/data/Player";
 
 interface AppProps {
     name: string
@@ -13,12 +16,17 @@ interface AppProps {
 
 class AppComponent extends React.Component<AppProps, {}> {
     // Model holding the state of the set of featured mods.
-    modModel:FeaturedModsModel;
+    modModel: FeaturedModsModel;
+
+    playerService: PlayerService;
+    gameModel: GameModel;
 
     constructor(props: AppProps) {
         super(props);
 
+        this.playerService = new PlayerService();
         this.modModel = new FeaturedModsModel();
+        this.gameModel = new GameModel(this.playerService)
     }
     handleSelect(index: number, last: number) {
         console.log(`Switching to tab ${index} from ${last}`);
@@ -48,7 +56,7 @@ class AppComponent extends React.Component<AppProps, {}> {
                     </TabPanel>
                     <TabPanel></TabPanel>
                     <TabPanel>
-                        <GameTab modModel={this.modModel}/>
+                        <GameTab modModel={this.modModel} gameModel={this.gameModel}/>
                     </TabPanel>
                     <TabPanel></TabPanel>
                     <TabPanel></TabPanel>

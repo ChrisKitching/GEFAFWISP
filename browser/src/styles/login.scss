@@ -1,0 +1,52 @@
+body {
+  margin: 0;
+  padding: 0;
+
+  font-family: sans-serif;
+  -webkit-app-region: drag;
+
+  background-image: url("../../public/img/bg/login.jpg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+
+button {
+  -webkit-app-region: no-drag;
+}
+
+form {
+  padding: 10px;
+  background-color: rgba(0, 0, 0, 0.7);
+  -webkit-app-region: no-drag;
+  border-radius: 5px;
+}
+
+.spacer {
+  height:100%;
+}
+
+.vcenter {
+  display: inline-block;
+  vertical-align: middle;
+  float: none;
+}
+
+.loginScreen {
+  height:100%;
+  width:100%;
+}
+
+.theRow {
+  height:100%;
+}
+
+.sm {
+  height: 3em;
+  border: 1px solid #F00;
+}
+
+.bg {
+  height: 10em;
+  border: 1px solid #000;
+}

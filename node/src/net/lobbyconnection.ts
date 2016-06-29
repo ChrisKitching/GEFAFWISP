@@ -1,9 +1,10 @@
 import {EventEmitter} from "events";
 import {execSync} from "child_process";
 import {createHash} from "crypto";
-import {config} from "../config";
+import {pkgconfig} from "../config";
 import * as MessageTypes from "./MessageTypes";
 import {Socket} from "net";
+import WebContents = Electron.WebContents;
 var iconv = require('iconv-lite');
 
 
@@ -13,6 +14,14 @@ var iconv = require('iconv-lite');
 export class LobbyConnection extends EventEmitter {
     private socket:Socket;
     private uid:string;
+
+    // Where in browser-land to send all the events.
+    private theWebContents:WebContents;
+
+    constructor(web:WebContents) {
+        super();
+        this.theWebContents = web;
+    }
 
     /**
      * Send a message to the server.
@@ -81,22 +90,44 @@ export class LobbyConnection extends EventEmitter {
         let json:any = JSON.parse(msg);
 
         // Figure out which sort of message it is, create an appropriately-typed inteface from it,
-        // and emit an event (or process it internally).
+        // and emit an event to both Node and the renderer (or process it internally).
         switch (json.command) {
             case "session":
                 this.handleSession(<MessageTypes.Session> json);
                 break;
             case "update":
                 this.emit("update", <MessageTypes.Update> json);
+                this.theWebContents.send("update", <MessageTypes.Update> json);
+                break;
+            case "authentication_failed":
+                this.emit("authentication_failed", <MessageTypes.AuthenticationFailed> json);
+                this.theWebContents.send("authentication_failed", <MessageTypes.AuthenticationFailed> json);
                 break;
             case "welcome":
                 this.emit("welcome", <MessageTypes.Welcome> json);
+                this.theWebContents.send("welcome", <MessageTypes.Welcome> json);
                 break;
             case "player_info":
                 this.emit("player_info", <MessageTypes.PlayerInfo> json);
+                this.theWebContents.send("player_info", <MessageTypes.PlayerInfo> json);
                 break;
             case "mod_info":
                 this.emit("mod_info", <MessageTypes.ModInfo> json);
+                this.theWebContents.send("mod_info", <MessageTypes.ModInfo> json);
+                break;
+            case "social":
+                this.emit("social", <MessageTypes.Social> json);
+                this.theWebContents.send("social", <MessageTypes.Social> json);
+                break;
+            case "game_info":
+                // Convert the single-game form of the message into the array form for consistency.
+                // TODO: Make the server send only the array form of this message.
+                if (!("games" in json)) {
+                    json = {command: "game_info", games: json}
+                }
+
+                this.emit("game_info", <MessageTypes.GameInfo> json);
+                this.theWebContents.send("game_info", <MessageTypes.GameInfo> json);
                 break;
 
             // TODO: The rest of the protocol.
@@ -165,13 +196,13 @@ export class LobbyConnection extends EventEmitter {
         // TODO: UTF-8-ify.
         this.socket = new Socket();
         this.socket.setKeepAlive(true);
-        this.socket.connect(config.SERVERS.LOBBY.PORT, config.SERVERS.LOBBY.HOST);
+        this.socket.connect(pkgconfig.SERVERS.LOBBY.PORT, pkgconfig.SERVERS.LOBBY.HOST);
         this.socket.pause();
         this.socket.on("connect", () => {
             // The version check and session acquisition message.
             this.send(<MessageTypes.AskSession> {
                 "command": "ask_session",
-                "version": config.VERSION,
+                "version": pkgconfig.VERSION,
                 "user_agent": "faf-client"
             })
         });

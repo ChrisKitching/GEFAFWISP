@@ -1,7 +1,7 @@
 // Interfaces for all message types we send to the FAF server.
 
 
-import {Rating} from "../../../browser/src/model/data/Player";
+import {Rating, Player} from "../../../browser/src/model/data/Player";
 /**
  * Base interface for all messages we send to the server.
  */
@@ -216,13 +216,23 @@ export interface Update extends InboundMessage {
 }
 
 /**
+ * Sent when your login credentials were incorrect somehow.
+ */
+export interface AuthenticationFailed extends InboundMessage {
+    command: "authentication_failed";
+
+    // An error message from the server.
+    text: string;
+}
+
+/**
  * Sent when authentication succeeds. The server sends you your own player info object.
  */
 export interface Welcome extends InboundMessage {
     command: "welcome";
 
     // A Player object representing yourself.
-    // me: Player;
+    me: Player;
 }
 
 /**

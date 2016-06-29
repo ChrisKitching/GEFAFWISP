@@ -1,15 +1,21 @@
 import * as React from 'react';
-import {ipcRenderer} from 'electron';
 import {ModInfo} from "../../../node/src/net/MessageTypes";
 import FeaturedMod from "./FeaturedMod.tsx";
 import {FeaturedModsModel} from "../model/FeaturedModsModel";
+import GameComponent from "./Game.tsx";
+import {GameModel} from "../model/GameModel";
+import {Game} from "../model/data/Game";
 
 interface GameTabProps {
     modModel: FeaturedModsModel;
+    gameModel: GameModel;
 }
 
 interface GameTabState {
-    featuredMods: ModInfo[]
+    featuredMods?: ModInfo[];
+
+    // The list of games currently displayed.
+    shownGames?: Game[];
 }
 
 class GameTab extends React.Component<GameTabProps, GameTabState> {
@@ -26,7 +32,8 @@ class GameTab extends React.Component<GameTabProps, GameTabState> {
 
         // Initial state.
         this.state = {
-            featuredMods: this.props.modModel.getMods()
+            featuredMods: this.props.modModel.getMods(),
+            shownGames: this.props.gameModel.getOpenGames()
         }
     }
 
@@ -72,11 +79,18 @@ class GameTab extends React.Component<GameTabProps, GameTabState> {
                     }
                 )}
             </ul>
+
         </div>
 
         {/* The game list and suchlike. */}
         <div className="col-sm-9">
-
+            {this.state.featuredMods
+            // Not all mods are to be shown in the UI...
+                .filter((mod) => mod.publish == 1)
+                .map(function(listValue) {
+                        return <li href="#" key={listValue.name} className="list-group-item"><FeaturedMod mod={listValue}/></li>;
+                    }
+                )}
 
         </div>
     </div>
