@@ -7,13 +7,18 @@
 
 
 var fs = require("fs");
-let Conf:any = require("user-appdata");
+import {app} from "electron";
+import * as path from  "path";
+import * as mkdirp from "mkdirp";
 
 // Obtain the application name in the most amusing way possible.
 let appName:string = require('../../../package.json').name;
 
 // The flavour of package configuration to load.
 let CONFIG_VARIETY:string = "production";
+let CONFIG_FILE_NAME:string = "config.json";
+
+let configFilePath:string = path.join(app.getPath("userData"), CONFIG_FILE_NAME);
 
 // Load package config.
 let content:string = fs.readFileSync("./node/config/" + CONFIG_VARIETY + ".json");
@@ -28,7 +33,7 @@ interface FAFConfig {
 }
 
 // The default configuration used when the config file is absent or broken.
-let defaultConfiguration:FAFConfig = {
+let defaultConfiguration = {
 };
 
 export class Config {
@@ -43,16 +48,29 @@ export class Config {
     static configuration: any;
 
     static load() {
-        // Load user config. This is almost completey untyped, alas.
-        Config.configuration = new Conf({appname : appName, defaultSettings : defaultConfiguration});
+
+        // Make sure the file exists.
+        mkdirp.sync(app.getPath("userData"));
+        fs.closeSync(fs.openSync(configFilePath, 'a'));
+
+        Config.configuration = defaultConfiguration;
+
+        try {
+            Config.configuration = JSON.parse(fs.readFileSync(configFilePath, 'utf8'));
+        } catch (e) {
+            // File was presumably corrupt. Truncate it and start again.
+            fs.closeSync(fs.openSync(configFilePath, 'w'));
+            Config.configuration = defaultConfiguration;
+        }
     }
 
     static get(key:string) {
-        return Config.configuration.settings[key];
+        return Config.configuration[key];
     }
 
     static put(key:string, value:any) {
-        Config.configuration.settings[key] = value;
-        Config.configuration.save();
+        Config.configuration[key] = value;
+
+        fs.writeFile(configFilePath, JSON.stringify(Config.configuration));
     }
 }
