@@ -68,8 +68,13 @@ function connectToServer() {
     });
 
     // Special event for login, since it needs custom logic in addition to just sending the message
-    ipcMain.on('login', (event: any, username:string, password:string) => {
+    ipcMain.on('login', (event: any, username:string, password:string, remember:boolean) => {
         conn.login(username, password);
+
+        if (remember) {
+            Config.put("savedUsername", username);
+            Config.put("savedPassword", password);
+        }
     });
 
     conn.on("connect", () => {
@@ -80,6 +85,13 @@ function connectToServer() {
 
         // If not, we're already showing the login screen, so we just wait for it to call login.
     });
+
+    // Show the login screen if the saved credentials turn out to be wrong (you got banned etc.)
+    if (haveSavedCredentials()) {
+        conn.once("authentication_failed", () => {
+            mainWindow.webContents.send('show_login_ui');
+        });
+    }
 
     // On a successful login, show the main UI. Unsuccessful login messages from the server are
     // handled directly by the login screen component. Here in node-land we just handle the two

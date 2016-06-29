@@ -10,8 +10,10 @@ import * as React from "react";
 interface LoginProps {}
 
 interface LoginState {
+    // Form controls.
     username?: string;
     password?: string;
+    remember?: boolean;
 
     angry?: boolean;
 }
@@ -45,9 +47,11 @@ class LoginComponent extends React.Component<LoginProps, LoginState> {
     handleUsernameChange(e:any) {
         this.setState({username: e.target.value});
     }
-
     handlePasswordChange(e:any) {
         this.setState({password: e.target.value});
+    }
+    handleRememberChange(e:any) {
+        this.setState({remember: e.target.value});
     }
 
     handleSubmit(e:any) {
@@ -55,7 +59,7 @@ class LoginComponent extends React.Component<LoginProps, LoginState> {
         clearTimeout(this.angryTimer);
 
         // Send the crap to the server.
-        ipcRenderer.send('login', this.state.username, this.state.password);
+        ipcRenderer.send('login', this.state.username, this.state.password, this.state.remember);
         return false;
     }
 
@@ -78,7 +82,7 @@ class LoginComponent extends React.Component<LoginProps, LoginState> {
                     <input type="password" className={classnames} value={this.state.password} onChange={(e:any) => this.handlePasswordChange(e)}/>
                 </div>
                 <div className="checkbox">
-                    <label><input type="checkbox"/> Remember me</label>
+                    <label><input type="checkbox" onChange={(e:any) => this.handleRememberChange(e)}/> Remember me</label>
                 </div>
                 <button type="submit" className="btn btn-default">Login</button>
             </form>

@@ -33,23 +33,26 @@ let defaultConfiguration:FAFConfig = {
 
 export class Config {
     /**
+     * Alas, the user-appdata library lacks typings.
+     *
      * Keys:
      *
      * savedUsername?: string;
      * savedPassword?: string;
      */
-    static configuration: Map<string, any>;
+    static configuration: any;
 
     static load() {
         // Load user config. This is almost completey untyped, alas.
-        Config.configuration = new Map<string, any>();
-        let config:any = new Conf({appname : appName, defaultSettings : defaultConfiguration});
-        for (var key in config.settings) {
-            Config.configuration.set(key, config.settings[key]);
-        }
+        Config.configuration = new Conf({appname : appName, defaultSettings : defaultConfiguration});
     }
 
     static get(key:string) {
-        return Config.configuration.get(key);
+        return Config.configuration.settings[key];
+    }
+
+    static put(key:string, value:any) {
+        Config.configuration.settings[key] = value;
+        Config.configuration.save();
     }
 }
