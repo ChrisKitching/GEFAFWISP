@@ -6,7 +6,6 @@ import * as classNames from 'classnames';
 const style: any = require('../styles/login.scss');
 
 import * as React from "react";
-import Timer = NodeJS.Timer;
 
 interface LoginProps {}
 
@@ -22,7 +21,7 @@ interface LoginState {
  */
 class LoginComponent extends React.Component<LoginProps, LoginState> {
     // Used to trigger the removal of the redness from the UI.
-    angryTimer: Timer;
+    angryTimer: number;
 
     constructor(props: LoginProps) {
         super();
