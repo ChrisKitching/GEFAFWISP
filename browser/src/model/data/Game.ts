@@ -1,6 +1,7 @@
 import {ServerGame} from "../../../../node/src/net/MessageTypes";
 import {PlayerService} from "../PlayerService";
 import {Player} from "./Player";
+const objectToMap = require('object-to-map');
 
 /**
  * Represents the visibility states of a game. PUBLIC is visible to everyone, FRIENDS is visible to
@@ -100,13 +101,39 @@ export class Game {
         this.hasPassword = gameInfo.password_protected;
         this.id = gameInfo.uid;
         this.name = gameInfo.title;
+        this.numPlayers = gameInfo.num_players;
+        this.maxPlayers = gameInfo.max_players;
         this.featuredMod = gameInfo.featured_mod;
-        this.featured_mod_versions = gameInfo.featured_mod_versions;
-        this.simMods = gameInfo.sim_mods;
+        this.featured_mod_versions = this.convertVersions(gameInfo.featured_mod_versions);
+        this.simMods = objectToMap(gameInfo.sim_mods);
         this.mapName = gameInfo.mapname;
         this.mapPath = gameInfo.map_file_path;
         this.host = ps.byName(gameInfo.host);
-        this.teams = this.desugarTeams(gameInfo.teams, ps);
+        this.teams = this.desugarTeams(this.preConvertTeams(gameInfo.teams), ps);
+    }
+
+    // TODO #6: These two could be fixed in the server.
+
+    private preConvertTeams(serverTeams:Object):Map<number, string[]> {
+        // Convert the serverVersions json object into a Map<number, number>.
+        let versions:Map<string, string[]> = objectToMap(serverTeams);
+        let out:Map<number, string[]> = new Map<number, string[]>();
+        versions.forEach((value: string[], key: string) => {
+            out.set(parseInt(key), value);
+        });
+
+        return out;
+    }
+
+    private convertVersions(serverVersions:Object) {
+        // Convert the serverVersions json object into a Map<number, number>.
+        let versions:Map<string, number> = objectToMap(serverVersions);
+        let out:Map<number, number> = new Map<number, number>();
+        versions.forEach((value: number, key: string) => {
+            out.set(parseInt(key), value);
+        });
+
+        return out;
     }
 
     /**
@@ -123,18 +150,29 @@ export class Game {
 
         // Annoyingly enough, foreach's argument takes value, then key.
         serverTeams.forEach((players: string[], teamNum: number) => {
-            ret.set(teamNum, players.map((playerName:string) => ps.byName(playerName).id));
+            ret.set(teamNum, players.map((playerName:string) => {
+                let player:Player = ps.byName(playerName);
+
+                if (player == undefined) {
+                    console.error("Missing player: " + playerName);
+                    return -1;
+                }
+
+                return player.id;
+            }));
 
             // The maximum used team ID is handy for the FFA team desugaring step.
             maxTeam = Math.max(teamNum, maxTeam);
         });
 
         // Desgar team 1 into a series of single-element teams.
-        let newTeam = maxTeam + 1;
-        let FFATeam: number[] = ret.get(1);
-        ret.delete(1);
+        if (ret.has(1)) {
+            let newTeam = maxTeam + 1;
+            let FFATeam:number[] = ret.get(1);
+            ret.delete(1);
 
-        FFATeam.forEach((playerId:number) => ret.set(newTeam++, [playerId]));
+            FFATeam.forEach((playerId:number) => ret.set(newTeam++, [playerId]));
+        }
 
         return ret;
     }

@@ -2,7 +2,7 @@ import * as React from 'react';
 import {ModInfo} from "../../../node/src/net/MessageTypes";
 import FeaturedMod from "./FeaturedMod.tsx";
 import {FeaturedModsModel} from "../model/FeaturedModsModel";
-import GameComponent from "./Game.tsx";
+import GameComponent from "./GameComponent";
 import {GameModel} from "../model/GameModel";
 import {Game} from "../model/data/Game";
 
@@ -16,6 +16,9 @@ interface GameTabState {
 
     // The list of games currently displayed.
     shownGames?: Game[];
+
+    // The type of games to show, or null if all games should be shown.
+    gameType?: string;
 }
 
 class GameTab extends React.Component<GameTabProps, GameTabState> {
@@ -29,11 +32,17 @@ class GameTab extends React.Component<GameTabProps, GameTabState> {
             });
         });
 
+        this.props.gameModel.on("dirty", () => {
+            this.setState({
+                shownGames: this.props.gameModel.getGamesOfType(this.state.gameType)
+            });
+        });
 
         // Initial state.
         this.state = {
             featuredMods: this.props.modModel.getMods(),
-            shownGames: this.props.gameModel.getOpenGames()
+            shownGames: this.props.gameModel.getGamesOfType(null),
+            gameType: null
         }
     }
 
@@ -84,11 +93,9 @@ class GameTab extends React.Component<GameTabProps, GameTabState> {
 
         {/* The game list and suchlike. */}
         <div className="col-sm-9">
-            {this.state.featuredMods
-            // Not all mods are to be shown in the UI...
-                .filter((mod) => mod.publish == 1)
-                .map(function(listValue) {
-                        return <li href="#" key={listValue.name} className="list-group-item"><FeaturedMod mod={listValue}/></li>;
+            {this.state.shownGames
+                .map(function(listValue:Game) {
+                        return <GameComponent game={listValue}/>;
                     }
                 )}
 

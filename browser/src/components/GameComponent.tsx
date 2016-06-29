@@ -21,7 +21,7 @@ class GameComponent extends React.Component<GameProps, {}> {
         };
 
         return (
-            <div className="games">
+            <div className="gameComponent">
                 <img style={imgFloat} src="img/gameListIcons/private_game.png"/>
                 <h5><b>{this.props.game.name}</b></h5>
                 <small>on map <b>{this.props.game.mapName}</b></small><br/>

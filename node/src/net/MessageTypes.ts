@@ -280,7 +280,7 @@ export interface ModInfo extends InboundMessage {
     publish: number;
 }
 
-export interface ServerGame {
+export class ServerGame {
     // A string that maps to one of the Visibility enum values in the model.
     visibility: string;
 
@@ -302,10 +302,10 @@ export interface ServerGame {
     // The ZePatcher version information for every file used by this game.
     // Yes. Really.
     // The keys are the ids of the files, the values are their ZePatcher version number.
-    featured_mod_versions: Map<number, number>;
+    featured_mod_versions: Object;
 
     // Any other sim mods that are enabled. Keys are mod UID, values are mod pretty name for display.
-    sim_mods: Map<string, string>;
+    sim_mods: Object;
 
     // The name/path of the map.
     mapname: string;
@@ -322,7 +322,7 @@ export interface ServerGame {
     // Which players are in which teams.
     // Maps team number to lists of usernames TODO: USE IDS YOU PRUNE.
     // Team 1 is the FFA team. This should be desugared into separate teams, really.
-    teams: Map<number, string[]>;
+    teams: Object;
 }
 
 export interface GameInfo extends InboundMessage {
