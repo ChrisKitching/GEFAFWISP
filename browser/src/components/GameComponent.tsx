@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {Game} from "../model/data/Game";
+import {getPrettyMapName} from "../model/data/MapNames";
 
 interface GameProps {
     game: Game
@@ -27,7 +28,7 @@ class GameComponent extends React.Component<GameProps, {}> {
             <div className="gameComponent">
                 <img style={imgFloat} src={previewUrl}/>
                 <h5><b>{this.props.game.name}</b></h5>
-                <small>on map <b>{this.props.game.mapName}</b></small><br/>
+                <small>on map <b>{getPrettyMapName(this.props.game.mapName)}</b></small><br/>
                 <small>with <b>{this.props.game.numPlayers} / {this.props.game.maxPlayers}</b> players</small><br/>
                 <small>by <b>{this.props.game.host.name}</b></small>
             </div>
