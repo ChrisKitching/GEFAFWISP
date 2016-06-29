@@ -96,7 +96,7 @@ class GameTab extends React.Component<GameTabProps, GameTabState> {
         <div className="col-sm-9">
             {this.state.shownGames
                 .map(function(listValue:Game) {
-                        return <GameComponent game={listValue}/>;
+                        return <GameComponent key={listValue.id} game={listValue}/>;
                     }
                 )}
 

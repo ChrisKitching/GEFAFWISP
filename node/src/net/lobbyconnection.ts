@@ -124,7 +124,7 @@ export class LobbyConnection extends EventEmitter {
                 // Convert the single-game form of the message into the array form for consistency.
                 // TODO: Make the server send only the array form of this message.
                 if (!("games" in json)) {
-                    json = {command: "game_info", games: json}
+                    json = {command: "game_info", games: [json]}
                 }
 
                 this.emit("game_info", <MessageTypes.GameInfo> json);

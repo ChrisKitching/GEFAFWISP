@@ -55,7 +55,7 @@ export class GameModel extends EventEmitter {
         }
 
         // If this is an update, merge the objects.
-        if (serverGame.uid in this.games) {
+        if (this.games.has(serverGame.uid)) {
             this.games.get(serverGame.uid).update(serverGame, this.playerService);
         } else {
             // It's a new game, so add it.
