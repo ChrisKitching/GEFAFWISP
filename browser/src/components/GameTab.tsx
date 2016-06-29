@@ -5,6 +5,7 @@ import {FeaturedModsModel} from "../model/FeaturedModsModel";
 import GameComponent from "./GameComponent";
 import {GameModel} from "../model/GameModel";
 import {Game} from "../model/data/Game";
+const style: any = require('../styles/games.scss');
 
 interface GameTabProps {
     modModel: FeaturedModsModel;
