@@ -5,6 +5,7 @@ import {pkgconfig} from "../config";
 import * as MessageTypes from "./MessageTypes";
 import {Socket} from "net";
 import WebContents = Electron.WebContents;
+import {BufferWrapper} from "./BufferWrapper";
 var iconv = require('iconv-lite');
 
 
@@ -158,46 +159,18 @@ export class LobbyConnection extends EventEmitter {
     }
 
     /**
-     * Read exactly length bytes from socket. If there are not that many bytes available to be read,
-     * return null.
-     *
-     * Just to keep life interesting, the default behaviour of Socket is to sometimes return more
-     * than you ask for. This can cause all kinds of badness.
-     *
-     * @param socket Socket to read from.
-     * @param length Number of bytes to read.
-     */
-    readExactly(socket:Socket, length:number):Buffer {
-        // There is a hole in the type system here: typings say this returns a Buffer, but sometimes
-        // it's a string (or null).
-        let stuffRead:any = this.socket.read(length);
-
-        // Null is returned by the socket if there are not enough bytes.
-        if (stuffRead == null) {
-            return null;
-        }
-
-        // Now we have _at least_ length many bytes in the buffer stuffRead. Let's now, hilariously,
-        // put back the extra ones.
-        let block:Buffer = new Buffer(stuffRead);
-
-        let extraBuf = block.slice(length);
-        socket.unshift(extraBuf);
-
-        return block.slice(0, length);
-    }
-
-    /**
      * Connect to the server. We declare that we are "connected" after we have opened a socket and
      * got a reply to our ask_session message. This ensures our client is a version the server is
      * prepared to talk to before we send any events to the user and start trying to do things.
      */
     connect() {
+        // Must be larger than the largest message we can ever receive, or we're fucked.
+        let msgBuffer:BufferWrapper = new BufferWrapper(new Buffer(2000000));
+
         // TODO: UTF-8-ify.
         this.socket = new Socket();
         this.socket.setKeepAlive(true);
         this.socket.connect(pkgconfig.SERVERS.LOBBY.PORT, pkgconfig.SERVERS.LOBBY.HOST);
-        this.socket.pause();
         this.socket.on("connect", () => {
             // The version check and session acquisition message.
             this.send(<MessageTypes.AskSession> {
@@ -209,11 +182,13 @@ export class LobbyConnection extends EventEmitter {
 
         // Length remaining to extract from this block.
         let lengthToRead = -1;
-        this.socket.on('readable', () => {
+        this.socket.on('data', (data:Buffer) => {
+            msgBuffer.append(data);
+
             // console.error("Paused: " + this.socket.)
             if (lengthToRead == -1) {
                 // Check if there are enough bytes yet...
-                let lengthBuffer:Buffer = this.readExactly(this.socket, 4);
+                let lengthBuffer:Buffer = msgBuffer.readExactly(4);
                 if (lengthBuffer == null) {
                     return;
                 }
@@ -222,7 +197,7 @@ export class LobbyConnection extends EventEmitter {
             }
 
             // Wait for enough bytes...
-            let block:Buffer = this.readExactly(this.socket, lengthToRead);
+            let block:Buffer = msgBuffer.readExactly(lengthToRead);
             if (block == null) {
                 return;
             }
