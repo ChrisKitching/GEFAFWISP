@@ -22,11 +22,24 @@ var options = {
         contentBase: './browser/public',
         publicPath: 'http://localhost:8080/built/'
     },
+    resolveUrlLoader: {
+        // Catch fire on error (which is not the default for some reason...)
+        fail: true
+    },
     module: {
         loaders: [
             {
-                test: /\.s?css$/,
-                loaders: ['style', 'css', 'sass'],
+                test: /\.(png|jpg)$/,
+                loader: 'file'
+            },
+            {
+                test   : /\.css$/,
+                loaders: ['style', 'css', 'resolve-url'],
+                include: PATHS.app
+            },
+            {
+                test   : /\.scss$/,
+                loaders: ['style', 'css', 'resolve-url', 'sass?sourceMap'],
                 include: PATHS.app
             },
             {
