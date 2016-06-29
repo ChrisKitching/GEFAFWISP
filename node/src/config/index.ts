@@ -48,9 +48,7 @@ export class Config {
     static configuration: any;
 
     static load() {
-
         // Make sure the file exists.
-        mkdirp.sync(app.getPath("userData"));
         fs.closeSync(fs.openSync(configFilePath, 'a'));
 
         Config.configuration = defaultConfiguration;
