@@ -4,7 +4,7 @@
   "description": "A FAF client that doesn't suck.",
   "main": "index.js",
   "scripts": {
-    "prestart": "tsc -p browser && tsc -p node",
+    "prestart": "tsc -sourcemap -p browser && tsc -sourcemap -p node",
     "start": "electron node",
     "postinstall": "cd browser && typings install && cd ../node && typings install",
     "test": "mocha './test/**/*.spec.tsx' --compilers js:babel-core/register --require ignore-styles --recursive",
