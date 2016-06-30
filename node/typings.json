@@ -3,6 +3,7 @@
     "version": false,
     "globalDependencies": {
         "github-electron": "registry:dt/github-electron#1.2.4+20160622101043",
+        "html-entities": "registry:dt/html-entities#1.2.0+20160412134357",
         "irc": "registry:dt/irc#0.3.12+20160521154229",
         "node": "registry:env/node#6.0.0+20160622202520"
     },

@@ -3,11 +3,14 @@ import {execSync} from "child_process";
 import {createHash} from "crypto";
 import {pkgconfig} from "../config";
 import * as MessageTypes from "./MessageTypes";
+import {AllHtmlEntities} from "html-entities";
 import {Socket} from "net";
 import WebContents = Electron.WebContents;
 import {BufferWrapper} from "./BufferWrapper";
 var iconv = require('iconv-lite');
 
+// The authors of that library apparently haven't heard of "static".
+let entities:AllHtmlEntities = new AllHtmlEntities();
 
 /**
  * Represents a connection to the main FAF server.
@@ -90,6 +93,9 @@ export class LobbyConnection extends EventEmitter {
 
         let json:any = JSON.parse(msg);
 
+        // Expand any HTML entities in strings in this json object.
+        json = this.deEntityify(json);
+
         // Figure out which sort of message it is, create an appropriately-typed inteface from it,
         // and emit an event to both Node and the renderer (or process it internally).
         switch (json.command) {
@@ -132,6 +138,37 @@ export class LobbyConnection extends EventEmitter {
                 break;
 
             // TODO: The rest of the protocol.
+        }
+    }
+
+    /**
+     * Recursive type-system-abusing function to expand HTML entities in arbitrary json objects.
+     */
+    deEntityify(msg:any) {
+        switch (typeof(msg)) {
+            case "string":
+                return entities.decode(msg);
+            case "object":
+                // Recursively call this function on all keys/values in the object and return it.
+                if (Array.isArray(msg)) {
+                    return msg.map((e:any) => this.deEntityify(e));
+                } else {
+                    let ret:any = {};
+
+                    for (var key in msg) {
+                        if (!msg.hasOwnProperty(key)) {
+                            continue;
+                        }
+
+                        ret[this.deEntityify(key)] = this.deEntityify(msg[key]);
+                    }
+
+                    return ret;
+                }
+
+            default:
+                // Hope for the best :D
+                return msg;
         }
     }
 
