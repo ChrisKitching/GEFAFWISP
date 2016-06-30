@@ -3,18 +3,31 @@ import 'bootstrap';
 
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import * as React from "react";
-import ChatComponent from "./Chat.tsx";
+import {ChatComponent, ChatProps} from "./Chat.tsx";
 
 interface AppProps {
     name: string
 }
 
-class AppComponent extends React.Component<AppProps, {}> {
+interface AppState {
+    chatState: ChatProps
+}
+
+class AppComponent extends React.Component<AppProps, AppState> {
     constructor(props: AppProps) {
         super(props);
+        this.handleSelect = this.handleSelect.bind(this);
+    }
+    get state() {
+        return {
+            chatState: {
+                
+            } as ChatProps
+        }
     }
     handleSelect(index: number, last: number) {
         console.log(`Switching to tab ${index} from ${last}`);
+        this.setState({name: 'foo'} as any);
     }
     render() {
         return (
@@ -23,7 +36,8 @@ class AppComponent extends React.Component<AppProps, {}> {
                     <img className="logo" src="./img/app_icon.png" />
                     <h1>FA Forever</h1>
                 </div>
-                <Tabs onSelect={this.handleSelect}>
+                <Tabs onSelect={this.handleSelect}
+                      selectedIndex={1}>
                     <TabList>
                         <Tab><img src="./img/tabIcons/news.png" />What's new</Tab>
                         <Tab><img src="./img/tabIcons/chat.png" />Chat Lobby</Tab>
@@ -37,13 +51,13 @@ class AppComponent extends React.Component<AppProps, {}> {
                         <iframe frameBorder="" height="100%" id='whats_new_iframe' src="http://www.faforever.com/news/"></iframe>
                     </TabPanel>
                     <TabPanel>
-                        <ChatComponent></ChatComponent>
+                        <ChatComponent {...this.state.chatState} />
                     </TabPanel>
-                    <TabPanel></TabPanel>
-                    <TabPanel></TabPanel>
-                    <TabPanel></TabPanel>
-                    <TabPanel></TabPanel>
-                    <TabPanel></TabPanel>
+                    <TabPanel />
+                    <TabPanel />
+                    <TabPanel />
+                    <TabPanel />
+                    <TabPanel />
                 </Tabs>
                 
             </div>
