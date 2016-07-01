@@ -20,7 +20,7 @@ export interface ServerMessage extends Message {
 }
 
 export class Channel {
-    name:string;
+    name: string;
     users: string[];
     messages: Message[];
 
@@ -58,6 +58,8 @@ export class ChatModel extends EventEmitter {
 
         // You joined a channel
         ipcRenderer.on('irc_channel_joined', (event:any, msg:IrcMessages.ChannelJoined) => {
+            console.error("Channel joined (Browser)");
+            console.error(msg);
             this.channels.push(new Channel(msg.channel));
             this.emit("channel_joined");
         });
@@ -114,7 +116,23 @@ export class ChatModel extends EventEmitter {
         ipcRenderer.on('motd', (event:any, msg:IrcMessages.MOTD) => {
             // Write message to all channels.
             this.channels.forEach((c:Channel) => c.addMessage(<ServerMessage> {content:msg.message}));
-        })
+        });
+
+        // Name change
+        ipcRenderer.on('irc_name_change', (event:any, msg:IrcMessages.NameChange) => {
+            // Update every channel containing this user to have their new name, and post a message
+            // there saying their name was changed.
+            msg.channels.forEach((cName:string, _:number, array:string[]) => {
+                let c:Channel = this.getChannel(cName);
+
+                // Add a message explaining this update.
+                c.addMessage(<ServerMessage> {content: msg.who + " is now known as " + msg.newName});
+
+                // Update the name record for this individual.
+                let index:number = c.users.indexOf(msg.who)
+                c.users[index] = msg.newName;
+            });
+        });
     }
 
     getChannel(name:string):Channel {

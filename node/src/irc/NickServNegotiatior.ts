@@ -65,7 +65,6 @@ export class NickServNegotiatior extends EventEmitter {
         this.ircClient.once('registered', (message:any) => {
             // This is the name we ended up with, not necessarily the one we asked for.
             let actualName:string = message.args[0];
-            console.error("REGISTERED: " + actualName);
 
             if (actualName != this.username) {
                 // Someone is using our name, attempt recovery.
@@ -116,8 +115,6 @@ export class NickServNegotiatior extends EventEmitter {
                 return;
             }
         }
-
-        console.error("Handle: " + msg);
 
         switch (this.state) {
             case State.SENT_RECOVER:

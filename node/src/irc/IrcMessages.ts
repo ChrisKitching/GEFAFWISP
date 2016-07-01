@@ -68,4 +68,13 @@ export interface PlayerLeft extends IrcMessage {
     channel: string;
 }
 
+/**
+ * Somebody else left a channel you are in
+ */
+export interface NameChange extends IrcMessage {
+    who: string;
+    newName: string;
 
+    // The channels they are in.
+    channels: string[];
+}

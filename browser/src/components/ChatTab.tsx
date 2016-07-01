@@ -21,6 +21,7 @@ export class ChatTab extends React.Component<ChatProps, ChatState> {
 
     render() {
         let channels:Channel[] = this.props.chatModel.getChannels();
+        console.error("Channels: " + channels);
         return (
 
             
