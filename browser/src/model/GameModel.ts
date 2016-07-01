@@ -34,7 +34,6 @@ export class GameModel extends EventEmitter {
 
         // Listen to game_info messages from the server.
         ipcRenderer.on('game_info', (event:any, msg: MessageTypes.GameInfo) => {
-            console.error("Got me some games!");
             for (let i:number = 0; i < msg.games.length; i++) {
                 this.handleServerGame(msg.games[i]);
             }

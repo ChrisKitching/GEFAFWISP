@@ -21,6 +21,10 @@
     "PROXY": {
       "HOST": "proxy.test.faforever.com",
       "PORT": 9124
+    },
+    "IRC": {
+      "HOST": "irc.faforever.com",
+      "PORT": 6667
     }
   },
 

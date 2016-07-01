@@ -5,13 +5,13 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import {ipcRenderer} from 'electron';
 import * as MessageTypes from "../../../node/src/net/MessageTypes";
 import * as React from "react";
-import ChatComponent from "./Chat.tsx";
+import ChatTab from "./ChatTab.tsx";
 import GameTab from "./GameTab.tsx";
 import {FeaturedModsModel} from "../model/FeaturedModsModel";
 import {PlayerService} from "../model/PlayerService";
 import {GameModel} from "../model/GameModel";
 import {Player} from "../model/data/Player";
-
+import {ChatModel} from "../model/ChatModel";
 interface AppProps {
     name: string
 }
@@ -22,6 +22,7 @@ class AppComponent extends React.Component<AppProps, {}> {
 
     playerService: PlayerService;
     gameModel: GameModel;
+    chatModel: ChatModel;
 
     constructor(props: AppProps) {
         super(props);
@@ -29,15 +30,14 @@ class AppComponent extends React.Component<AppProps, {}> {
         this.playerService = new PlayerService();
         this.modModel = new FeaturedModsModel();
         this.gameModel = new GameModel(this.playerService);
+        this.chatModel = new ChatModel();
 
         // Listen for the availability of the "Me" object.
         ipcRenderer.on('welcome', (event:any, msg: MessageTypes.Welcome) => {
             this.playerService.setMe(msg.me);
         });
     }
-    handleSelect(index: number, last: number) {
-        console.log(`Switching to tab ${index} from ${last}`);
-    }
+
     render() {
         return (
             <div className="app">
@@ -45,7 +45,7 @@ class AppComponent extends React.Component<AppProps, {}> {
                     <img className="logo" src="./img/app_icon.png" />
                     <h1>FA Forever</h1>
                 </div>
-                <Tabs onSelect={this.handleSelect}>
+                <Tabs selectedIndex={1}>
                     <TabList>
                         <Tab><img src="./img/tabIcons/news.png" />What's new</Tab>
                         <Tab><img src="./img/tabIcons/chat.png" />Chat Lobby</Tab>
@@ -59,15 +59,15 @@ class AppComponent extends React.Component<AppProps, {}> {
                         <iframe frameBorder="" height="100%" id='whats_new_iframe' src="http://www.faforever.com/news/"></iframe>
                     </TabPanel>
                     <TabPanel>
-                        <ChatComponent></ChatComponent>
+                        <ChatTab chatModel={this.chatModel}/>
                     </TabPanel>
-                    <TabPanel></TabPanel>
+                    <TabPanel/>
                     <TabPanel>
                         <GameTab modModel={this.modModel} gameModel={this.gameModel}/>
                     </TabPanel>
-                    <TabPanel></TabPanel>
-                    <TabPanel></TabPanel>
-                    <TabPanel></TabPanel>
+                    <TabPanel />
+                    <TabPanel />
+                    <TabPanel />
                 </Tabs>
                 
             </div>

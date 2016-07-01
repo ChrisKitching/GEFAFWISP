@@ -1,6 +1,6 @@
 import {app, BrowserWindow, ipcMain} from "electron";
 import {LobbyConnection} from "./src/net/lobbyconnection";
-import {IrcClient} from "./irc";
+import {IrcClient} from "./src/irc";
 import {Config} from "./src/config"
 import * as MessageTypes from "./src/net/MessageTypes";
 
@@ -67,8 +67,25 @@ function connectToServer() {
         conn.send(msg);
     });
 
+    // The user's password will be needed again for NickServ registration, ickily enough.
+
+    // We create the on welcome handler here (slightly strangely) so we don't have to do evil
+    // contortions to get the password into it.
+    let createLoginListener = function(name:string, password:string) {
+        // On a successful login, show the main UI. Unsuccessful login messages from the server are
+        // handled directly by the login screen component. Here in node-land we just handle the two
+        // events that have to do with swapping between the two ReactDOM.render calls in entry.tsx, and
+        // mostly leave the browser alone once we're done fucking about with that.
+        conn.on("welcome", (msg:MessageTypes.Welcome) => {
+            connectToIRC(name, password);
+            mainWindow.webContents.send('show_main_ui');
+            mainWindow.show();
+        });
+    };
+
     // Special event for login, since it needs custom logic in addition to just sending the message
     ipcMain.on('login', (event: any, username:string, password:string, remember:boolean) => {
+        createLoginListener(username, password);
         conn.login(username, password);
 
         if (remember) {
@@ -80,7 +97,11 @@ function connectToServer() {
     conn.on("connect", () => {
         // If we have saved credentials, use them now.
         if (haveSavedCredentials()) {
-            conn.login(Config.get("savedUsername"), Config.get("savedPassword"));
+            let savedUsername:string = Config.get("savedUsername");
+            let savedPassword:string = Config.get("savedPassword");
+
+            createLoginListener(savedUsername, savedPassword);
+            conn.login(savedUsername, savedPassword);
         }
 
         // If not, we're already showing the login screen, so we just wait for it to call login.
@@ -93,20 +114,13 @@ function connectToServer() {
         });
     }
 
-    // On a successful login, show the main UI. Unsuccessful login messages from the server are
-    // handled directly by the login screen component. Here in node-land we just handle the two
-    // events that have to do with swapping between the two ReactDOM.render calls in entry.tsx, and
-    // mostly leave the browser alone once we're done fucking about with that.
-    conn.on("welcome", () => {
-        mainWindow.webContents.send('show_main_ui');
-        mainWindow.show();
-    });
-
     conn.connect();
 }
 
-function connectToIRC() {
-    ircClient = new IrcClient('Sheeo_1', ['#test_derp'], mainWindow.webContents);
+function connectToIRC(nick: string, password:string) {
+    // TODO: Receive the list of channels from the server in welcome and pass them in here.
+    // For now we'll just ignore the channels the server sends us completely and only join this one.
+    ircClient = new IrcClient(nick, password, ['#aeolus'], mainWindow.webContents);
 }
 
 app.on('ready', function () {
@@ -123,7 +137,6 @@ app.on('ready', function () {
     // propagate into browser land before we've started the browser.
     ipcMain.on("browser-ready", (event: any) => {
         connectToServer();
-        connectToIRC();
 
         // Show login screen if we don't have any saved credentials to use.
         if (!haveSavedCredentials()) {
