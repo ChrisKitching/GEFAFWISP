@@ -50,56 +50,55 @@ class GameTab extends React.Component<GameTabProps, GameTabState> {
     render() {
         return (
 
-<div className="games">
+<div className="game_tab container-fluid">
     <h2>Games</h2>
 
     <div className="row">
         {/* The left-hand column with the featured mod list */}
         <div className="col-sm-3">
-            <h4>1 vs 1 Automatch</h4>
+            <div id="sidebar">
+                <h4>1 vs 1 Automatch</h4>
 
-            {/* Ladder join buttons. */}
-            <div className="btn-group" data-toggle="buttons">
-                <label className="btn btn-default">
-                    <input type="checkbox"/><img src="img/factions/uef.png"/>
-                </label>
-                <label className="btn btn-default">
-                    <input type="checkbox"/><img src="img/factions/cybran.png"/>
-                </label>
-                <label className="btn btn-default">
-                    <input type="checkbox"/><img src="img/factions/aeon.png"/>
-                </label>
-                <label className="btn btn-default">
-                    <input type="checkbox"/><img src="img/factions/seraphim.png"/>
-                </label>
+                {/* Ladder join buttons. */}
+                <div className="btn-group" id="ladder_btns" data-toggle="buttons">
+                    <label className="btn btn-default">
+                        <input type="checkbox"/><img src="img/factions/uef.png"/>
+                    </label>
+                    <label className="btn btn-default">
+                        <input type="checkbox"/><img src="img/factions/cybran.png"/>
+                    </label>
+                    <label className="btn btn-default">
+                        <input type="checkbox"/><img src="img/factions/aeon.png"/>
+                    </label>
+                    <label className="btn btn-default">
+                        <input type="checkbox"/><img src="img/factions/seraphim.png"/>
+                    </label>
+                </div>
+
+                <h4>Create Custom Game</h4>
+
+                {/* Featured mod list. */}
+                <ul className="list-group">
+                    {this.state.featuredMods
+                        // Not all mods are to be shown in the UI...
+                        .filter((mod) => mod.publish == 1)
+                        .map(function(listValue) {
+                            return <li href="#" key={listValue.name} className="list-group-item"><FeaturedMod mod={listValue}/></li>;
+                        }
+                    )}
+                </ul>
             </div>
-
-            <span>Select the factions you are prepared to play as, and get automatically matched to
-            a player of similar skill.</span>
-
-            <h4>Create Custom Game</h4>
-
-            {/* Featured mod list. */}
-            <ul className="list-group">
-                {this.state.featuredMods
-                    // Not all mods are to be shown in the UI...
-                    .filter((mod) => mod.publish == 1)
-                    .map(function(listValue) {
-                        return <li href="#" key={listValue.name} className="list-group-item"><FeaturedMod mod={listValue}/></li>;
-                    }
-                )}
-            </ul>
-
         </div>
 
         {/* The game list and suchlike. */}
         <div className="col-sm-9">
+            <div id="game_list">
             {this.state.shownGames
                 .map(function(listValue:Game) {
                         return <GameComponent key={listValue.id} game={listValue}/>;
                     }
                 )}
-
+            </div>
         </div>
     </div>
 

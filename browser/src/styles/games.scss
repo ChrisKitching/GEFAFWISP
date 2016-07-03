@@ -4,7 +4,7 @@
   height: 110px;
   border: 10px;
   margin: 2px;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(0, 0, 0, 0.5);
   text-overflow:clip;
   border-radius: 3px;
   overflow: hidden;
@@ -15,4 +15,33 @@
   margin-top: 5px;
   margin-left: 5px;
   box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.7);
+}
+
+.game_tab #ladder_btns .btn {
+  padding-left: 2px;
+  padding-right: 2px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+
+  background-color: darkgray;
+}
+
+.game_tab #sidebar {
+  background-color: rgba(0, 0, 0, 0.7);
+  border-radius: 3px;
+  padding: 5px;
+}
+
+.game_tab #game_list {
+  background-color: rgba(0, 0, 0, 0.7);
+  border-radius: 3px;
+  padding: 5px;
+}
+
+.game_tab .col-sm-3 {
+  padding: 5px;
+}
+
+.game_tab .col-sm-9 {
+  padding: 5px;
 }
