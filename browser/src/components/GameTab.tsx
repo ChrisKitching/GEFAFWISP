@@ -47,6 +47,26 @@ class GameTab extends React.Component<GameTabProps, GameTabState> {
         }
     }
 
+    /**
+     * Called when an element of the featured mod list is clicked.
+     * @param modName The name of the featured mod that was clicked.
+     */
+    modClicked(modName: string) {
+        // Check that a nonzero amount of games will still be shown if we filter.
+        let newShownGames: Game[] = this.props.gameModel.getGamesOfType(modName);
+        if (newShownGames.length == 0) {
+            this.setState({
+                gameType: null
+            });
+            return;
+        }
+
+        this.setState({
+            shownGames: newShownGames,
+            gameType: modName
+        })
+    }
+
     render() {
         return (
 
@@ -76,15 +96,19 @@ class GameTab extends React.Component<GameTabProps, GameTabState> {
         <h5>Create Custom Game</h5>
 
         {/* Featured mod list. */}
-        <ul className="list-group">
+        <div className="list-group">
             {this.state.featuredMods
                 // Not all mods are to be shown in the UI...
                 .filter((mod) => mod.publish == 1)
-                .map(function(listValue) {
-                    return <li href="#" key={listValue.name} className="list-group-item"><FeaturedMod mod={listValue}/></li>;
+                .map((listValue:ModInfo) => {
+                    return (
+                        <a href="#" key={listValue.name} className="list-group-item" onClick={() => this.modClicked(listValue.name)}>
+                            <FeaturedMod count={this.props.gameModel.getNumOpenGamesOfType(listValue.name)} mod={listValue}/>
+                        </a>
+                    );
                 }
             )}
-        </ul>
+        </div>
     </div>
 
     {/* The game list and suchlike. */}

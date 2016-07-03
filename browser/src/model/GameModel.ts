@@ -22,6 +22,7 @@ enum SortKey {
 export class GameModel extends EventEmitter {
     // A map from game id to game info.
     private games: Map<number, Game>;
+
     private playerService:PlayerService;
 
     constructor(ps: PlayerService) {
@@ -65,6 +66,7 @@ export class GameModel extends EventEmitter {
                 console.error(g.state);
                 return;
             }
+
             this.games.set(serverGame.uid, g);
         }
     }
@@ -100,7 +102,8 @@ export class GameModel extends EventEmitter {
         return ret;
     }
 
-    getOpenGames(): Game[] {
-        return [];
+    // TODO: Ewwwww.
+    getNumOpenGamesOfType(gameType: string): number {
+        return this.getGamesOfType(gameType).length;
     }
 }
