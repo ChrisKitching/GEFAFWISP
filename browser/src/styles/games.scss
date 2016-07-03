@@ -17,31 +17,40 @@
   box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.7);
 }
 
+.featured_mod {
+  text-shadow: 1px 1px rgba(0, 0, 0, 0.7);
+}
+
 .game_tab #ladder_btns .btn {
   padding-left: 2px;
   padding-right: 2px;
   padding-top: 6px;
   padding-bottom: 6px;
 
-  background-color: darkgray;
+  background-color: #777777;
+}
+
+.game_tab .list-group-item {
+  background-color: #777777;
+  padding: 8px;
 }
 
 .game_tab #sidebar {
+  float:left;
   background-color: rgba(0, 0, 0, 0.7);
   border-radius: 3px;
   padding: 5px;
+  margin-left: 5px;
+  width: 231px;
 }
 
 .game_tab #game_list {
+  float:right;
   background-color: rgba(0, 0, 0, 0.7);
   border-radius: 3px;
   padding: 5px;
-}
+  margin-left: 5px;
+  margin-right: 5px;
 
-.game_tab .col-sm-3 {
-  padding: 5px;
-}
-
-.game_tab .col-sm-9 {
-  padding: 5px;
+  width: calc(100% - 246px);
 }
