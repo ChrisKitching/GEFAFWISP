@@ -84,7 +84,7 @@ export class LobbyConnection extends EventEmitter {
      * @param msg Exactly one json message fromthe server.
      */
     handleMessage(msg:string) {
-        // console.log("Server message: " + msg);
+        console.log("Server message: " + msg);
 
         // Ridiculous special case for the "PING" message.
         if (msg == "PING") {

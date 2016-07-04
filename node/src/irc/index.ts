@@ -67,7 +67,6 @@ export class IrcClient {
         });
 
         this.ircClient.on('pm', (nick:string, text:string, message:any) => {
-            console.error("BLARG:" + text);
             let browserEvent:IrcMessages.PrivateMessage = <IrcMessages.PrivateMessage> {
                 from: nick,
                 message: text
@@ -75,19 +74,19 @@ export class IrcClient {
             webContents.send("irc_pm", browserEvent);
         });
 
-        this.ircClient.on('message#', (nick:string, text:string, message:any) => {
+        this.ircClient.on('message#', (nick:string, to:string, text:string, message:any) => {
+            console.error("MEessage: " + nick);
+            console.error("MEesage: " + text);
+            console.error("MEesage: " + message);
             let browserEvent:IrcMessages.PublicMessage = <IrcMessages.PublicMessage> {
                 from: nick,
                 message: text,
-                channels: message.channels
+                channel: to
             };
             webContents.send("irc_message", browserEvent);
         });
 
         this.ircClient.on('join', (channel:string, who:string, message:any) => {
-            console.error("Chanel joined");
-            console.error(who);
-            console.error(nickname);
             if (who == nickname) {
                 let browserEvent:IrcMessages.ChannelJoined = <IrcMessages.ChannelJoined> {
                     channel: channel

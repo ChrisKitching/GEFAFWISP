@@ -3,26 +3,18 @@ import {ipcRenderer} from 'electron';
 import * as IrcMessages from "../../../node/src/irc/IrcMessages";
 import {ModInfo} from "../../../node/src/net/MessageTypes";
 
-interface Message {}
+type MessageType = "normal" | "action" | "server";
 
-export interface NormalMessage extends Message {
-    from: string;
-    content: string;
-}
-
-export interface ActionMessage extends Message {
-    from: string;
-    content: string;
-}
-
-export interface ServerMessage extends Message {
-    content: string;
+export interface ChatMessage {
+    type: MessageType;
+    from?: string;
+    content:string;
 }
 
 export class Channel {
     name: string;
     users: string[];
-    messages: Message[];
+    messages: ChatMessage[];
 
     constructor(name:string) {
         this.name = name;
@@ -30,7 +22,7 @@ export class Channel {
         this.messages = [];
     }
 
-    addMessage(message:Message) {
+    addMessage(message:ChatMessage) {
         this.messages.push(message);
     }
 
@@ -85,12 +77,11 @@ export class ChatModel extends EventEmitter {
 
         // Public message received.
         ipcRenderer.on('irc_message', (event:any, msg:IrcMessages.PublicMessage) => {
-            // Messages can be sent to more than one channel at once, in principle.
-            for (let i:number = 0; i < msg.channels.length; i++) {
-                let channel:Channel = this.getChannel(msg.channels[i]);
-                channel.addMessage(<NormalMessage> {content: msg.message, from: msg.from});
-                this.emit("message");
-            }
+            console.error("Message: " + msg.channel);
+
+            let channel:Channel = this.getChannel(msg.channel);
+            channel.addMessage({type:"normal", content: msg.message, from: msg.from});
+            this.emit("message");
         });
 
         // Private message received.
@@ -102,20 +93,26 @@ export class ChatModel extends EventEmitter {
                 this.channels.push(channel);
             }
 
-            channel.addMessage(<NormalMessage> {content: msg.message, from: msg.from});
+            channel.addMessage({type:"normal", content: msg.message, from: msg.from});
+            this.emit("message");
         });
 
         // Incoming /me messages.
         ipcRenderer.on('irc_action', (event:any, msg:IrcMessages.Action) => {
             let channel:Channel = this.getChannel(msg.target);
 
-            channel.addMessage(<ActionMessage> {from:msg.from, content: msg.action});
+            channel.addMessage({type:"action", from:msg.from, content: msg.action});
         });
 
         // Mesage of the day.
         ipcRenderer.on('motd', (event:any, msg:IrcMessages.MOTD) => {
             // Write message to all channels.
-            this.channels.forEach((c:Channel) => c.addMessage(<ServerMessage> {content:msg.message}));
+            this.channels.forEach((c:Channel) =>
+                c.addMessage({
+                    type: "server",
+                    content:msg.message
+                })
+            );
         });
 
         // Name change
@@ -126,10 +123,13 @@ export class ChatModel extends EventEmitter {
                 let c:Channel = this.getChannel(cName);
 
                 // Add a message explaining this update.
-                c.addMessage(<ServerMessage> {content: msg.who + " is now known as " + msg.newName});
+                c.addMessage({
+                    type: "server",
+                    content: msg.who + " is now known as " + msg.newName
+                });
 
                 // Update the name record for this individual.
-                let index:number = c.users.indexOf(msg.who)
+                let index:number = c.users.indexOf(msg.who);
                 c.users[index] = msg.newName;
             });
         });

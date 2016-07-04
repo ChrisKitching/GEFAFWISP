@@ -12,8 +12,8 @@ export interface PublicMessage extends IrcMessage {
     from: string;
     message: string;
 
-    // The list of channels the message was sent to.
-    channels: string[];
+    // The channel this was sent to. The library unpacks broadcasts for us.
+    channel: string;
 }
 
 /**

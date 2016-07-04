@@ -236,6 +236,14 @@ export interface Welcome extends InboundMessage {
 }
 
 /**
+ * Represents a url/tooltip tuple sent from the server to represent an avatar.
+ */
+export interface Avatar {
+    url: string,
+    tooltip: string
+}
+
+/**
  * What the server sends you of a player in a player_info message (oddly enough, this is not all the
  * fields of an actual player object, hence the split :/. And some of the names are silly.
  */
@@ -245,7 +253,7 @@ export interface ServerPlayer {
     global_rating: Rating;
     ladder_rating: Rating;
     number_of_games: number;
-    avatar: string;
+    avatar?: Avatar;
     country: string;
     clan: string;
 }

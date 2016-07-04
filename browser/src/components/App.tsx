@@ -59,7 +59,7 @@ class AppComponent extends React.Component<AppProps, {}> {
                         <iframe frameBorder="" height="100%" id='whats_new_iframe' src="http://www.faforever.com/news/"></iframe>
                     </TabPanel>
                     <TabPanel>
-                        <ChatTab chatModel={this.chatModel}/>
+                        <ChatTab chatModel={this.chatModel} ps={this.playerService}/>
                     </TabPanel>
                     <TabPanel/>
                     <TabPanel>

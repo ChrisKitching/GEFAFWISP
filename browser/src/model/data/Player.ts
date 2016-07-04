@@ -1,4 +1,4 @@
-import {ServerPlayer} from "../../../../node/src/net/MessageTypes";
+import {ServerPlayer, Avatar} from "../../../../node/src/net/MessageTypes";
 /**
  * Represents a TrueSkill rating.
  */
@@ -20,8 +20,8 @@ export class Player {
     // Number of games the player has played.
     numGames: number;
 
-    // Path to the user's avatar.
-    avatar: string;
+    // path, tooltip tuple representing the avatar, or undefined.
+    avatar: Avatar;
 
     // A country code.
     country: string;
