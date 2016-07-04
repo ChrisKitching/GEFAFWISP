@@ -75,8 +75,8 @@ export class Config {
 }
 
 ipcMain.on('config:get', (event: IpcMainEvent, key: string) => {
-    event.returnValue = Config.get(key);
+    event.returnValue = Config.get(key) || null;
 });
 ipcMain.on('config:put', (event: IpcMainEvent, key: string, value: any) => {
     event.returnValue = Config.put(key, value);
-})
+});
