@@ -18,7 +18,7 @@ class GameComponent extends React.Component<GameProps, {}> {
     render() {
         let imgFloat:any = {
             float: "left",
-            "margin-right":"10px"
+            "marginRight":"10px"
         };
 
         let previewUrl:string = "http://content.faforever.com/faf/vault/map_previews/small/" + this.props.game.mapName + ".png"
