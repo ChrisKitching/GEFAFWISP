@@ -101,7 +101,7 @@ class GameTab extends React.Component<GameTabProps, GameTabState> {
                 .map((listValue: ModInfo) => {
                     let className = "list-group-item";
                     if(this.state.gameType == listValue.name) {
-                        className += " selected";
+                        className += " active";
                     }
                     return (
                         <a href="#" key={listValue.name}
