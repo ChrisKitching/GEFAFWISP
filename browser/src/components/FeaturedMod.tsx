@@ -2,7 +2,6 @@ import * as React from 'react';
 import {ModInfo} from "../../../node/src/net/MessageTypes";
 
 interface FeaturedModProps {
-    selected: boolean;
     mod: ModInfo;
     count: number;
 }
