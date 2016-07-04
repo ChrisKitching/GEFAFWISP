@@ -62,9 +62,20 @@ body {
   width: 100%;
   height: 45px;
   bottom: 0;
-  margin-bottom: 0 !important;
+  margin-bottom: -5px !important;
   padding: 1em;
-  background: grey;
+  padding-bottom: 1.5em;
+  background: #222222;
+}
+
+.react-tabs [role=tab] {
+  border: 0;
+  img {
+    -webkit-filter: invert(100%);
+  }
+}
+.react-tabs [role=tab][aria-selected=true] {
+  background: #2a9fd6;
 }
 
 .ReactTabs__TabPanel {

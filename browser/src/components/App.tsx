@@ -57,14 +57,14 @@ class AppComponent extends React.Component<AppProps, {}> {
                 </div>
                 <Tabs selectedIndex={this.tabIndex} onSelect={this.handleSelect}>
                     <TabList>
-                        <Tab><img src="./img/tabIcons/news.png" />What's new</Tab>
-                        <Tab><img src="./img/tabIcons/chat.png" />Chat Lobby</Tab>
-                        <Tab><img src="./img/tabIcons/coop.png" />Coop Missions</Tab>
-                        <Tab><img src="./img/tabIcons/games.png" />Find Games</Tab>
-                        <Tab><img src="./img/tabIcons/leaderboards.png" />Leaderboards</Tab>
-                        <Tab><img src="./img/tabIcons/replays.png" />Replays</Tab>
-                        <Tab><img src="./img/tabIcons/maps.png" />Maps</Tab>
-                        <Tab><img src="./img/tabIcons/mods.png" />Mods</Tab>
+                        <Tab><img src="./img/tabIcons/news.svg" /> What's new</Tab>
+                        <Tab><img src="./img/tabIcons/chat.svg" /> Chat Lobby</Tab>
+                        <Tab><img src="./img/tabIcons/coop.svg" /> Coop Missions</Tab>
+                        <Tab><img src="./img/tabIcons/games.svg" /> Find Games</Tab>
+                        <Tab><img src="./img/tabIcons/leaderboards.svg" /> Leaderboards</Tab>
+                        <Tab><img src="./img/tabIcons/replays.svg" /> Replays</Tab>
+                        <Tab><img src="./img/tabIcons/maps.svg" /> Maps</Tab>
+                        <Tab><img src="./img/tabIcons/mods.svg" /> Mods</Tab>
                     </TabList>
                     <TabPanel>
                         <iframe frameBorder="" height="100%" id='whats_new_iframe' src="http://www.faforever.com/news/"></iframe>
