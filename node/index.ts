@@ -77,8 +77,8 @@ function connectToServer() {
         // handled directly by the login screen component. Here in node-land we just handle the two
         // events that have to do with swapping between the two ReactDOM.render calls in entry.tsx, and
         // mostly leave the browser alone once we're done fucking about with that.
-        conn.on("welcome", (msg:MessageTypes.Welcome) => {
-            connectToIRC(name, password);
+        conn.on("welcome", (msg: MessageTypes.Welcome) => {
+            connectToIRC(name, msg.me.id.toString(), password);
             mainWindow.webContents.send('show_main_ui');
             mainWindow.show();
         });
@@ -118,10 +118,10 @@ function connectToServer() {
     conn.connect();
 }
 
-function connectToIRC(nick: string, password:string) {
+function connectToIRC(nick: string, user_id: string, password:string) {
     // TODO: Receive the list of channels from the server in welcome and pass them in here.
     // For now we'll just ignore the channels the server sends us completely and only join this one.
-    ircClient = new IrcClient(nick, password, ['#aeolus'], mainWindow.webContents);
+    ircClient = new IrcClient(nick, user_id, password, ['#aeolus'], mainWindow.webContents);
 }
 
 app.on('ready', function () {

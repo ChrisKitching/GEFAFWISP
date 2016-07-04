@@ -17,13 +17,16 @@ export class IrcClient {
     /**
      * Connect, authenticate with NickServ, and join the requested channels.
      *
-     * @param username Your account username.
-     * @param password Your account password.
+     * @param nickname Account nickname.
+     * @param user_id Account id.
+     * @param password Account password.
      * @param channels Channels to join post-authentication.
      */
-    authenticateAndConnect(username:string, password:string, channels:string[]) {
-        this.ircClient = new Client(pkgconfig.SERVERS.IRC.HOST, username, {
+    authenticateAndConnect(nickname: string, user_id: string, password:string, channels:string[]) {
+        this.ircClient = new Client(pkgconfig.SERVERS.IRC.HOST, nickname, {
             port:pkgconfig.SERVERS.IRC.PORT,
+            userName: user_id,
+            realName: 'FA Forever Client',
             autoConnect:false,
             showErrors:true,
             debug:true
@@ -35,7 +38,7 @@ export class IrcClient {
         hashed = createHash('md5').update(hashed, 'utf8').digest('hex');
 
         // This will auto-register our nick if the server has failed to do so for us.
-        let nickserv:NickServNegotiatior = new NickServNegotiatior(this.ircClient, username, hashed, "user+" + username + "@faforever.com");
+        let nickserv:NickServNegotiatior = new NickServNegotiatior(this.ircClient, nickname, hashed, "user+" + nickname + "@faforever.com");
 
         // Passes in the actual nick we ended up with post-argument.
         nickserv.once('ready', (nick:string) => {
@@ -46,8 +49,8 @@ export class IrcClient {
         this.ircClient.connect();
     }
 
-    constructor(nickname:string, password:string, channels:string[], webContents:WebContents) {
-        this.authenticateAndConnect(nickname, password, channels);
+    constructor(nickname:string, user_id: string, password:string, channels:string[], webContents:WebContents) {
+        this.authenticateAndConnect(nickname, user_id, password, channels);
 
         // /me messages.
         this.ircClient.on('action', (from:string, to:string, text:string, message:any) => {
