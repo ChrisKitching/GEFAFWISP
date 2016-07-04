@@ -11,7 +11,6 @@ import MapTab from "./MapTab.tsx";
 import {FeaturedModsModel} from "../model/FeaturedModsModel";
 import {PlayerService} from "../model/PlayerService";
 import {GameModel} from "../model/GameModel";
-import {Player} from "../model/data/Player";
 import {ChatModel} from "../model/ChatModel";
 interface AppProps {
     name: string

@@ -13,7 +13,13 @@ export interface ChatMessage {
 
 export class Channel {
     name: string;
+
+    // A list of all the names of users in this channel.
     users: string[];
+
+    // A list of names which are operators in this channel. A subset of the users list.
+    moderators: string[];
+
     messages: ChatMessage[];
 
     constructor(name:string) {
@@ -53,26 +59,34 @@ export class ChatModel extends EventEmitter {
             console.error("Channel joined (Browser)");
             console.error(msg);
             this.channels.push(new Channel(msg.channel));
-            this.emit("channel_joined");
+            this.emit("dirty");
         });
 
         // User joined a channel you were in.
         ipcRenderer.on('irc_player_joined', (event:any, msg:IrcMessages.PlayerJoined) => {
             this.getChannel(msg.channel).addUser(msg.who);
-            this.emit("player_joined");
+            this.emit("dirty");
         });
 
         // You left a channel.
         ipcRenderer.on('irc_channel_left', (event:any, msg:IrcMessages.ChannelLeft) => {
             this.channels.splice(this.channels.findIndex((c:Channel) => c.name == msg.channel), 1);
-            this.emit("channel_left");
+            this.emit("dirty");
         });
 
         // Someone left a channel you were in.
         ipcRenderer.on('irc_player_left', (event:any, msg:IrcMessages.PlayerLeft) => {
             let channel:Channel = this.getChannel(msg.channel);
             channel.removeUser(msg.who);
-            this.emit("player_left");
+            this.emit("dirty");
+        });
+
+        // Initial list of names for a channel.
+        ipcRenderer.on('irc_names', (event:any, msg:IrcMessages.Names) => {
+            let channel:Channel = this.getChannel(msg.channel);
+            msg.names.forEach((n:string) => channel.addUser(n));
+            channel.moderators = msg.moderators;
+            this.emit("dirty");
         });
 
         // Public message received.
@@ -81,7 +95,7 @@ export class ChatModel extends EventEmitter {
 
             let channel:Channel = this.getChannel(msg.channel);
             channel.addMessage({type:"normal", content: msg.message, from: msg.from});
-            this.emit("message");
+            this.emit("dirty");
         });
 
         // Private message received.
@@ -94,7 +108,7 @@ export class ChatModel extends EventEmitter {
             }
 
             channel.addMessage({type:"normal", content: msg.message, from: msg.from});
-            this.emit("message");
+            this.emit("dirty");
         });
 
         // Incoming /me messages.

@@ -11,23 +11,6 @@
   //white-space: nowrap;
 }
 
-
-// Clantags of user names in chat.
-.chat_clantag {
-  font-weight: bold;
-  padding-right: 5px;
-}
-
-// Avatar images in chat
-.chat_avatar {
-  padding-right: 5px;
-}
-
-// Rules to apply to the whole player identifier in chat (clantag, name, avatar).
-.chat_player {
-
-}
-
 // The message content of a normal chat message.
 .chat_msg_normal {
   padding-left: 10px;
@@ -45,27 +28,59 @@
 }
 
 
-.chat_channel #userlist {
+.chat_channel {
+  #chat_area {
+    float:right;
+    background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 3px;
+    padding: 5px;
+    margin-left: 5px;
+    margin-right: 5px;
+
+    width: calc(100% - 246px);
+  }
+
+  // Clantags of user names in chat.
+  .player_clantag {
+    font-weight: bold;
+    padding-right: 5px;
+  }
+
+  // Avatar images in chat
+  .player_avatar {
+    padding-right: 5px;
+  }
+
+  // Rules to apply to the whole player identifier in chat (clantag, name, avatar).
+  .player {
+
+  }
+}
+
+#chat_userlist {
   float:left;
   background-color: rgba(0, 0, 0, 0.7);
   border-radius: 3px;
   padding: 5px;
   margin-left: 5px;
   width: 231px;
+
+  // Clantags of players in that chat userlist.
+  .player_clantag {
+    font-weight: bold;
+    padding-right: 5px;
+  }
+
+  // Avatar images in chat userlist
+  .player_avatar {
+    padding-right: 5px;
+  }
+
+  // Rules to apply to the whole player identifier in chat userlist (clantag, name, flag, avatar).
+  .player {
+    display:block;
+  }
 }
-
-
-.chat_channel #chat_area {
-  float:right;
-  background-color: rgba(0, 0, 0, 0.7);
-  border-radius: 3px;
-  padding: 5px;
-  margin-left: 5px;
-  margin-right: 5px;
-
-  width: calc(100% - 246px);
-}
-
 
 //.chat_tab .react-tabs {
 //  height: 50%;

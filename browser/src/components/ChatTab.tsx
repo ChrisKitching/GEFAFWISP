@@ -20,15 +20,7 @@ export class ChatTab extends React.Component<ChatProps, ChatState> {
     constructor(props: ChatProps) {
         super(props);
 
-        this.props.chatModel.on('channel_joined', () => {
-            this.setState({
-                channels:this.props.chatModel.getChannels()
-            });
-        });
-
-
-        this.props.chatModel.on('message', () => {
-            console.error("ATtempt render of emssage");
+        this.props.chatModel.on('dirty', () => {
             this.setState({
                 channels:this.props.chatModel.getChannels()
             });

@@ -129,6 +129,28 @@ export class IrcClient {
             webContents.send("irc_name_change", browserEvent);
         });
 
+        // List of users in a channel.
+        this.ircClient.on('names', (channel:string, names:string[], message:any) => {
+            let users:string[] = [];
+            let moderators:string[] = [];
+            for (var name in names) {
+                if (names[name] == "@") {
+                    moderators.push(name);
+                } else {
+                    users.push(name);
+                }
+            }
+
+            users = moderators.concat(users);
+
+            let browserEvent:IrcMessages.Names = <IrcMessages.Names> {
+                channel: channel,
+                names: users,
+                moderators: moderators
+            };
+            webContents.send("irc_names", browserEvent);
+        });
+
         this.ircClient.on('error', console.error);
         // this.ircClient.on('raw', console.log);
 

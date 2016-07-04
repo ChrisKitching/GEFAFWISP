@@ -2,6 +2,7 @@ import * as React from 'react';
 import {Channel, ChatMessage} from "../../model/ChatModel";
 import ChatMessageComponent from "./ChatMessageComponent";
 import {PlayerService} from "../../model/PlayerService";
+import UserComponent from "./UserComponent.tsx";
 
 
 interface ChannelProps {
@@ -24,8 +25,10 @@ export class ChatChannel extends React.Component<ChannelProps, {}> {
 
 <div className="chat_channel">
     {/* The user list */}
-    <div id="userlist">
-        Userlist party!
+    <div id="chat_userlist">
+        {c.users.map((u:string) =>
+            <UserComponent player={this.props.ps.byName(u)} nick={u} showFlag={true}/>
+        )}
     </div>
 
     <div id="chat_area">

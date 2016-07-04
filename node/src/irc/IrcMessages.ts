@@ -78,3 +78,12 @@ export interface NameChange extends IrcMessage {
     // The channels they are in.
     channels: string[];
 }
+
+/**
+ * List of names of people in a channel.
+ */
+export interface Names extends IrcMessage {
+    channel: string;
+    names: string[];
+    moderators: string[];
+}
