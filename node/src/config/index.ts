@@ -72,3 +72,10 @@ export class Config {
         fs.writeFile(configFilePath, JSON.stringify(Config.configuration));
     }
 }
+
+ipcMain.on('config:get', (event: IpcMainEvent, key: string) => {
+    event.returnValue = Config.get(key);
+});
+ipcMain.on('config:put', (event: IpcMainEvent, key: string, value: any) => {
+    event.returnValue = Config.put(key, value);
+})
