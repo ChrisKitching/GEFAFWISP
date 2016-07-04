@@ -63,7 +63,7 @@ class AppComponent extends React.Component<AppProps, {}> {
                         <Tab><img src="./img/tabIcons/games.png" />Find Games</Tab>
                         <Tab><img src="./img/tabIcons/leaderboards.png" />Leaderboards</Tab>
                         <Tab><img src="./img/tabIcons/replays.png" />Replays</Tab>
-                        <Tab><img src="./img/tabIcons/mods.png" />Maps</Tab>
+                        <Tab><img src="./img/tabIcons/maps.png" />Maps</Tab>
                         <Tab><img src="./img/tabIcons/mods.png" />Mods</Tab>
                     </TabList>
                     <TabPanel>
