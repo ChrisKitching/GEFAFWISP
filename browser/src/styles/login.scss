@@ -4,10 +4,10 @@ body {
 
   font-family: sans-serif;
   -webkit-app-region: drag;
+}
 
-  background-image: url("../../public/img/bg/login.jpg");
-  background-repeat: no-repeat;
-  background-position: center;
+.loginScreen {
+  background: url("../../public/img/bg/login.jpg") no-repeat center;
   background-size: contain;
 }
 

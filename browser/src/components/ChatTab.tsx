@@ -35,8 +35,6 @@ export class ChatTab extends React.Component<ChatProps, ChatState> {
         let channels:Channel[] = this.state.channels;
         console.error("Channels: " + channels);
         return (
-
-            
 <div className="chat_tab">
     <Tabs>
         <TabList>
@@ -51,8 +49,6 @@ export class ChatTab extends React.Component<ChatProps, ChatState> {
         )}
     </Tabs>
 </div>
-
-
         );
     }
 }

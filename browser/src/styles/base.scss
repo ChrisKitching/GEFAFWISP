@@ -14,8 +14,8 @@ button {
 
 body {
   margin: 0;
-  background-color: #000000;
-  color: white;
+  background-color: #111111;
+  color: #969696;
   overflow: hidden;
 }
 
@@ -25,25 +25,26 @@ body {
   width: 100%;
   padding: .4em;
   height: 1.7em;
-  background: silver;
+  background: #2f2f2f;
+  h1 {
+    font-size: 10pt;
+    margin-top: 0;
+    padding-left: .5em;
+    float: left;
+  }
+  .logo {
+    width: 1.8em;
+    float: left;
+  }
+  .quitbtn {
+    float: right;
+    height: 1.7em;
+    font-size: 7pt;
+  }
 }
 
-.titlebar h1 {
-  size: .4em;
-  height: .4em;
-  font-size: 10pt;
-  line-height: 100%;
-  padding-left: .5em;
-  float: left;
-}
-
-.titlebar .logo {
-  width: 1.8em;
-  float: left;
-}
-
-.titlebar .quitbtn {
-  float: right;
+#content {
+  background: #111111;
 }
 
 #content, .app, #whats_new_iframe {
@@ -63,8 +64,7 @@ body {
   height: 50px;
   bottom: 0;
   margin-bottom: -5px !important;
-  padding: 1em;
-  padding-bottom: 1.5em;
+  padding: 1em 1em 1.5em;
   background: #222222;
 }
 
@@ -75,7 +75,7 @@ body {
   }
 }
 .react-tabs [role=tab][aria-selected=true] {
-  background: #2a9fd6;
+  background: #454545;
 }
 
 .ReactTabs__TabPanel {
