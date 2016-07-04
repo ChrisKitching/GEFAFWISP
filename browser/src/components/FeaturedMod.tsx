@@ -21,10 +21,10 @@ class FeaturedMod extends React.Component<FeaturedModProps, {}> {
         }
 
         return (
-
             <div className="featured_mod">
                 {pillSpan}
-                <img width="32" height="32" src={"./img/modIcons/" + this.props.mod.name + ".png"} className="featured_mod_icon"/> {this.props.mod.fullname}
+                <img width="32" height="32" src={"./img/modIcons/" + this.props.mod.name + ".png"} className="featured_mod_icon"/>
+                {this.props.mod.fullname}
             </div>
         );
     }

@@ -1,3 +1,5 @@
+$background-color: #777777;
+
 .gameComponent {
   display: inline-block;
   width: 300px;
@@ -9,48 +11,50 @@
   border-radius: 3px;
   overflow: hidden;
   white-space: nowrap;
+
+  img {
+    margin-top: 5px;
+    margin-left: 5px;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.7);
+  }
 }
 
-.gameComponent img {
-  margin-top: 5px;
-  margin-left: 5px;
-  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.7);
-}
-
-.featured_mod {
-  text-shadow: 1px 1px rgba(0, 0, 0, 0.7);
-}
-
-.game_tab #ladder_btns .btn {
-  padding-left: 2px;
-  padding-right: 2px;
-  padding-top: 6px;
-  padding-bottom: 6px;
-
-  background-color: #777777;
-}
-
-.game_tab .list-group-item {
-  background-color: #777777;
-  padding: 8px;
-}
-
-.game_tab #sidebar {
-  float:left;
-  background-color: rgba(0, 0, 0, 0.7);
-  border-radius: 3px;
-  padding: 5px;
-  margin-left: 5px;
-  width: 231px;
-}
-
-.game_tab #game_list {
-  float:right;
-  background-color: rgba(0, 0, 0, 0.7);
-  border-radius: 3px;
-  padding: 5px;
+.game_tab {
   margin-left: 5px;
   margin-right: 5px;
+  #ladder_btns .btn {
+    padding: 6px 2px;
+    background-color: $background-color;
+  }
 
-  width: calc(100% - 246px);
+  .sidebar {
+    float: left;
+    background-color: rgba(0, 0, 0, 0.7);
+    //border: 2px solid red;
+    border-radius: 3px;
+    padding: 5px 5px 0;
+    margin-bottom: 0;
+    width: 231px;
+
+    .list-group-item {
+      background-color: $background-color;
+      border: .1em solid #0e2231;
+      padding: .5em;
+    }
+    .featured_mod {
+      img {
+        margin-right: 5px;
+      }
+      text-shadow: 1px 1px rgba(0, 0, 0, 0.7);
+      color: #f8f8ff;
+    }
+  }
+  .game_list {
+    float: right;
+    background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 3px;
+    padding: 5px;
+    margin-left: 5px;
+    width: calc(100% - 246px);
+  }
 }

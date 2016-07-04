@@ -71,10 +71,8 @@ class GameTab extends React.Component<GameTabProps, GameTabState> {
         return (
 
 <div className="game_tab">
-    <h3>Games</h3>
-
     {/* The left-hand column with the featured mod list */}
-    <div id="sidebar">
+    <div className="sidebar">
         <h5>1 vs 1 Automatch</h5>
 
         {/* Ladder join buttons. */}
@@ -112,7 +110,7 @@ class GameTab extends React.Component<GameTabProps, GameTabState> {
     </div>
 
     {/* The game list and suchlike. */}
-    <div id="game_list">
+    <div className="game_list">
         {this.state.shownGames
             .map(function(listValue:Game) {
                     return <GameComponent key={listValue.id} game={listValue}/>;
