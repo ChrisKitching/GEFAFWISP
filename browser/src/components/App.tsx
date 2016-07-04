@@ -12,6 +12,7 @@ import {FeaturedModsModel} from "../model/FeaturedModsModel";
 import {PlayerService} from "../model/PlayerService";
 import {GameModel} from "../model/GameModel";
 import {ChatModel} from "../model/ChatModel";
+import {MapsModel} from "../model/MapsModel";
 interface AppProps {
     name: string
 }
@@ -26,6 +27,7 @@ class AppComponent extends React.Component<AppProps, {}> {
     playerService: PlayerService;
     gameModel: GameModel;
     chatModel: ChatModel;
+    mapsModel: MapsModel;
 
     constructor(props: AppProps) {
         super(props);
@@ -34,6 +36,7 @@ class AppComponent extends React.Component<AppProps, {}> {
         this.modModel = new FeaturedModsModel();
         this.gameModel = new GameModel(this.playerService);
         this.chatModel = new ChatModel();
+        this.mapsModel = new MapsModel();
 
         // Synchronously get the last-used tab before we start rendering
         this.tabIndex = ipcRenderer.sendSync('config:get', 'tabLastUsed') || 0;
@@ -80,7 +83,7 @@ class AppComponent extends React.Component<AppProps, {}> {
                     <TabPanel />
                     <TabPanel />
                     <TabPanel>
-                        <MapTab/>
+                        <MapTab mapsModel={this.mapsModel}/>
                     </TabPanel>
                     <TabPanel />
                 </Tabs>
