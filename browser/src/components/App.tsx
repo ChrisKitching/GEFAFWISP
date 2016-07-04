@@ -7,6 +7,7 @@ import * as MessageTypes from "../../../node/src/net/MessageTypes";
 import * as React from "react";
 import ChatTab from "./ChatTab.tsx";
 import GameTab from "./GameTab.tsx";
+import MapTab from "./MapTab.tsx";
 import {FeaturedModsModel} from "../model/FeaturedModsModel";
 import {PlayerService} from "../model/PlayerService";
 import {GameModel} from "../model/GameModel";
@@ -62,7 +63,8 @@ class AppComponent extends React.Component<AppProps, {}> {
                         <Tab><img src="./img/tabIcons/games.png" />Find Games</Tab>
                         <Tab><img src="./img/tabIcons/leaderboards.png" />Leaderboards</Tab>
                         <Tab><img src="./img/tabIcons/replays.png" />Replays</Tab>
-                        <Tab><img src="./img/tabIcons/mods.png" />Vaults</Tab>
+                        <Tab><img src="./img/tabIcons/mods.png" />Maps</Tab>
+                        <Tab><img src="./img/tabIcons/mods.png" />Mods</Tab>
                     </TabList>
                     <TabPanel>
                         <iframe frameBorder="" height="100%" id='whats_new_iframe' src="http://www.faforever.com/news/"></iframe>
@@ -76,6 +78,9 @@ class AppComponent extends React.Component<AppProps, {}> {
                     </TabPanel>
                     <TabPanel />
                     <TabPanel />
+                    <TabPanel>
+                        <MapTab/>
+                    </TabPanel>
                     <TabPanel />
                 </Tabs>
                 
