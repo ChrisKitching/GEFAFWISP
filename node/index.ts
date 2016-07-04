@@ -3,6 +3,7 @@ import {LobbyConnection} from "./src/net/lobbyconnection";
 import {IrcClient} from "./src/irc";
 import {Config} from "./src/config"
 import * as MessageTypes from "./src/net/MessageTypes";
+import IpcMainEvent = Electron.IpcMainEvent;
 
 let mainWindow:Electron.BrowserWindow;
 let ircClient:IrcClient;

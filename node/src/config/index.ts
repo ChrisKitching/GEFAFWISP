@@ -7,8 +7,9 @@
 
 
 var fs = require("fs");
-import {app} from "electron";
+import {app, ipcMain} from "electron";
 import * as path from  "path";
+import IpcMainEvent = Electron.IpcMainEvent;
 import * as mkdirp from "mkdirp";
 
 // Obtain the application name in the most amusing way possible.

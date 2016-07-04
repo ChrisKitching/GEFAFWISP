@@ -20,6 +20,9 @@ class AppComponent extends React.Component<AppProps, {}> {
     // Model holding the state of the set of featured mods.
     modModel: FeaturedModsModel;
 
+    // Currently displayed tab
+    tabIndex: number = 0;
+
     playerService: PlayerService;
     gameModel: GameModel;
     chatModel: ChatModel;
@@ -32,12 +35,18 @@ class AppComponent extends React.Component<AppProps, {}> {
         this.gameModel = new GameModel(this.playerService);
         this.chatModel = new ChatModel();
 
+        // Synchronously get the last-used tab before we start rendering
+        this.tabIndex = ipcRenderer.sendSync('config:get', 'tabLastUsed') || 0;
         // Listen for the availability of the "Me" object.
         ipcRenderer.on('welcome', (event:any, msg: MessageTypes.Welcome) => {
             this.playerService.setMe(msg.me);
         });
+        this.handleSelect = this.handleSelect.bind(this);
     }
-
+    handleSelect(tabIndex: number) {
+        this.tabIndex = tabIndex;
+        ipcRenderer.send('config:put', 'tabLastUsed', this.tabIndex);
+    }
     render() {
         return (
             <div className="app">
@@ -45,7 +54,7 @@ class AppComponent extends React.Component<AppProps, {}> {
                     <img className="logo" src="./img/app_icon.png" />
                     <h1>FA Forever</h1>
                 </div>
-                <Tabs selectedIndex={1}>
+                <Tabs selectedIndex={this.tabIndex} onSelect={this.handleSelect}>
                     <TabList>
                         <Tab><img src="./img/tabIcons/news.png" />What's new</Tab>
                         <Tab><img src="./img/tabIcons/chat.png" />Chat Lobby</Tab>
