@@ -98,10 +98,17 @@ class GameTab extends React.Component<GameTabProps, GameTabState> {
             {this.state.featuredMods
                 // Not all mods are to be shown in the UI...
                 .filter((mod) => mod.publish == 1)
-                .map((listValue:ModInfo) => {
+                .map((listValue: ModInfo) => {
+                    let className = "list-group-item";
+                    if(this.state.gameType == listValue.name) {
+                        className += " selected";
+                    }
                     return (
-                        <a href="#" key={listValue.name} className="list-group-item" onClick={() => this.modClicked(listValue.name)}>
-                            <FeaturedMod count={this.props.gameModel.getNumOpenGamesOfType(listValue.name)} mod={listValue}/>
+                        <a href="#" key={listValue.name}
+                           className={className}
+                           onClick={() => this.modClicked(listValue.name)}>
+                            <FeaturedMod count={this.props.gameModel.getNumOpenGamesOfType(listValue.name)}
+                                         mod={listValue} />
                         </a>
                     );
                 }

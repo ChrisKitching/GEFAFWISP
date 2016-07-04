@@ -48,6 +48,9 @@ $background-color: #777777;
       text-shadow: 1px 1px rgba(0, 0, 0, 0.7);
       color: #f8f8ff;
     }
+    .selected {
+      background-color: #0e2231;
+    }
   }
   .game_list {
     float: right;
