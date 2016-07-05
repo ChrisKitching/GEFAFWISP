@@ -146,4 +146,13 @@ app.on('ready', function () {
             mainWindow.show();
         }
     });
+
+    // Listen to window management requests from browser-land.
+    ipcMain.on("quit", (event: any) => {
+        app.quit();
+    });
+
+    ipcMain.on("minimise", (event: any) => {
+        mainWindow.minimize();
+    });
 });
