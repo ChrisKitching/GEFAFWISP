@@ -52,6 +52,11 @@ class GameTab extends React.Component<GameTabProps, GameTabState> {
      * @param modName The name of the featured mod that was clicked.
      */
     modClicked(modName: string) {
+        // If we're already filtering on this one, turn filtering off.
+        if (this.state.gameType == modName) {
+            modName = null;
+        }
+
         // Check that a nonzero amount of games will still be shown if we filter.
         let newShownGames: Game[] = this.props.gameModel.getGamesOfType(modName);
         if (newShownGames.length == 0) {
