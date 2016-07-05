@@ -12,7 +12,7 @@ import PreApp from './components/loginregistration/PreApp.tsx'
 ipcRenderer.on('show_main_ui', (event: any) => {
     console.error("Showing main ui");
     ReactDOM.render(
-        <AppComponent name="GEFAFWISP" />,
+        <AppComponent/>,
         document.getElementById('content')
     );
 });

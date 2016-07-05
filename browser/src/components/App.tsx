@@ -14,7 +14,6 @@ import {GameModel} from "../model/GameModel";
 import {ChatModel} from "../model/ChatModel";
 import {MapsModel} from "../model/MapsModel";
 interface AppProps {
-    name: string
 }
 
 class AppComponent extends React.Component<AppProps, {}> {
