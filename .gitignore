@@ -4,4 +4,4 @@ typings
 public/built
 *.js
 *.js.map
-
+bin
