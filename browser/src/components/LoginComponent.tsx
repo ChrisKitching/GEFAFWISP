@@ -74,12 +74,10 @@ class LoginComponent extends React.Component<LoginProps, LoginState> {
         <div className="col-sm-6 vcenter">
             <form role="form" onSubmit={(e:any) => this.handleSubmit(e)}>
                 <div className="form-group">
-                    <label>Username:</label>
-                    <input type="text" className={classnames} value={this.state.username} onChange={(e:any) => this.handleUsernameChange(e)}/>
+                    <input type="text" placeholder="Username" className={classnames} value={this.state.username} onChange={(e:any) => this.handleUsernameChange(e)}/>
                 </div>
                 <div className="form-group">
-                    <label>Password:</label>
-                    <input type="password" className={classnames} value={this.state.password} onChange={(e:any) => this.handlePasswordChange(e)}/>
+                    <input type="password" placeholder="Password" className={classnames} value={this.state.password} onChange={(e:any) => this.handlePasswordChange(e)}/>
                 </div>
                 <div className="checkbox">
                     <label><input type="checkbox" onChange={(e:any) => this.handleRememberChange(e)}/> Remember me</label>
