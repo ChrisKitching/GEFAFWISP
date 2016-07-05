@@ -56,6 +56,7 @@ class AppComponent extends React.Component<AppProps, {}> {
                     <img className="logo" src="./img/app_icon.png" />
                     <h1>FA Forever</h1>
                     <button className="quitbtn" onClick={() => {ipcRenderer.send("quit")}}>X</button>
+                    <button className="quitbtn" onClick={() => {ipcRenderer.send("maximise")}}>M</button>
                     <button className="quitbtn" onClick={() => {ipcRenderer.send("minimise")}}>-</button>
                 </div>
                 <Tabs selectedIndex={this.tabIndex} onSelect={this.handleSelect}>

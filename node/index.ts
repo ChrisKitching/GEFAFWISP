@@ -152,6 +152,15 @@ app.on('ready', function () {
         app.quit();
     });
 
+    ipcMain.on("maximise", (event: any) => {
+        // This one is a toggle.
+        if (!mainWindow.isMaximized()) {
+            mainWindow.maximize();
+        } else {
+            mainWindow.unmaximize();
+        }
+    });
+
     ipcMain.on("minimise", (event: any) => {
         mainWindow.minimize();
     });
