@@ -122,6 +122,10 @@ export class LobbyConnection extends EventEmitter {
                 this.emit("mod_info", <MessageTypes.ModInfo> json);
                 this.theWebContents.send("mod_info", <MessageTypes.ModInfo> json);
                 break;
+            case "registration_response":
+                this.emit("registration_response", <MessageTypes.RegistrationResponse> json);
+                this.theWebContents.send("social", <MessageTypes.RegistrationResponse> json);
+                break;
             case "social":
                 this.emit("social", <MessageTypes.Social> json);
                 this.theWebContents.send("social", <MessageTypes.Social> json);

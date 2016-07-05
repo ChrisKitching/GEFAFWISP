@@ -1,0 +1,55 @@
+body {
+  margin: 0;
+  padding: 0;
+
+  font-family: sans-serif;
+  -webkit-app-region: drag;
+}
+
+.preApp {
+  background: url("../../public/img/bg/login.jpg") no-repeat center;
+  background-size: contain;
+  height:100%;
+  width:100%;
+}
+
+form {
+  padding: 10px;
+  background-color: rgba(0, 0, 0, 0.7);
+  -webkit-app-region: no-drag;
+  border-radius: 5px;
+}
+
+
+// Vetical centering insanity...
+
+.theRow {
+  height:100%;
+}
+
+.spacer {
+  height:100%;
+}
+
+.vcenter {
+  display: inline-block;
+  vertical-align: middle;
+  float: none;
+}
+
+// Used briefly when a form input is invalid (according to the server).
+.angry-form-control {
+  border-color: red;
+  border-width: 2px;
+}
+
+// Used consistently while a form control holds input locally-invalidatable.
+.form-control:invalid {
+  border-color: red;
+  border-width: 2px;
+}
+
+// Text styling for the out-of-cheese error.
+.out-of-cheese {
+  color: red;
+}

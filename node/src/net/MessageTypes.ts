@@ -34,6 +34,18 @@ export interface Login extends OutboundMessage {
 }
 
 /**
+ * A request to create an account.
+ */
+export interface Register extends OutboundMessage {
+    command: "create_account";
+
+    // Desired username, password, and email.
+    login: string;
+    email: string;
+    password: string;
+}
+
+/**
  * Used to remove a friend or foe. Set either the friend or foe field. If both are set, the behaviour
  * of the server is undefined.
  */
@@ -358,6 +370,19 @@ export interface Social extends InboundMessage {
 
 export interface Avatar extends InboundMessage {
     command: "avatar"
+}
+
+// All possible values of the result field in a RegistrationResponse.
+type RegistrationResponseCode =
+    "SUCCESS" |
+    "INVALID_EMAIL" |
+    "INVALID_USERNAME" |
+    "USERNAME_TAKEN" |
+    "DISPOSABLE_EMAIL"
+
+export interface RegistrationResponse extends InboundMessage {
+    command: "registration_response";
+    result: RegistrationResponseCode
 }
 
 /**
