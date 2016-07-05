@@ -39,6 +39,7 @@ class AppComponent extends React.Component<AppProps, {}> {
 
         // Synchronously get the last-used tab before we start rendering
         this.tabIndex = ipcRenderer.sendSync('config:get', 'tabLastUsed') || 0;
+
         // Listen for the availability of the "Me" object.
         ipcRenderer.on('welcome', (event:any, msg: MessageTypes.Welcome) => {
             this.playerService.setMe(msg.me);

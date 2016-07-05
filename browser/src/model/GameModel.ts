@@ -85,7 +85,10 @@ export class GameModel extends EventEmitter {
      */
     getGamesOfType(gameType: string): Game[] {
         // A predicate to filter the game list by.
-        let filter = ((g:Game) => g.state == "open" && (gameType == null || g.featuredMod == gameType));
+        let filter = ((g:Game) =>
+            g.state == "open" &&
+            g.featuredMod != "ladder1v1" && // Exclude ladder games from the game list
+            (gameType == null || g.featuredMod == gameType));
 
         let ret:Game[] = [];
 
