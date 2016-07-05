@@ -2,6 +2,7 @@ import {EventEmitter} from "events";
 import {execSync} from "child_process";
 import {createHash} from "crypto";
 import {pkgconfig} from "../config";
+import * as path from "path"
 import * as MessageTypes from "./MessageTypes";
 import {AllHtmlEntities} from "html-entities";
 import {Socket} from "net";
@@ -74,7 +75,7 @@ export class LobbyConnection extends EventEmitter {
      */
     handleSession(msg: MessageTypes.Session) {
         // Use the session ID to get the uid (this is all we need it for).
-        this.uid = execSync("./bin/uid " + msg.session).toString();
+        this.uid = execSync(path.join(".", "bin", "uid") + " " + msg.session).toString();
         this.emit("connect");
     }
 
