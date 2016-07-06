@@ -2,10 +2,6 @@
   "VERSION": "0.42.0",
 
   "SERVERS": {
-    "RELAY": {
-      "HOST": "lobby.test.faforever.com",
-      "PORT": 8000
-    },
     "REPLAY": {
       "HOST": "lobby.test.faforever.com",
       "PORT": 15000
@@ -17,10 +13,6 @@
     "LOBBY": {
       "HOST": "lobby.test.faforever.com",
       "PORT": 8001
-    },
-    "PROXY": {
-      "HOST": "proxy.test.faforever.com",
-      "PORT": 9124
     },
     "IRC": {
       "HOST": "irc.faforever.com",
