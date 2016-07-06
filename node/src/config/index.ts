@@ -10,7 +10,6 @@ var fs = require("fs");
 import {app, ipcMain} from "electron";
 import * as path from  "path";
 import IpcMainEvent = Electron.IpcMainEvent;
-import * as mkdirp from "mkdirp";
 
 // Obtain the application name in the most amusing way possible.
 let appName:string = require('../../../package.json').name;
@@ -35,6 +34,9 @@ interface FAFConfig {
 
 // The default configuration used when the config file is absent or broken.
 let defaultConfiguration = {
+    // Path to the directory containing ForgedAlliance.exe
+    // TODO: Currently we rely on the old client to have put this in the right place for us...
+    binaryPath: path.join(app.getPath("appData"), "FAForever", "bin")
 };
 
 export class Config {
