@@ -40,14 +40,6 @@ let defaultConfiguration = {
 };
 
 export class Config {
-    /**
-     * Alas, the user-appdata library lacks typings.
-     *
-     * Keys:
-     *
-     * savedUsername?: string;
-     * savedPassword?: string;
-     */
     static configuration: any;
 
     static load() {
