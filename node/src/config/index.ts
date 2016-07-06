@@ -11,14 +11,14 @@ import {app, ipcMain} from "electron";
 import * as path from  "path";
 import IpcMainEvent = Electron.IpcMainEvent;
 
-// Obtain the application name in the most amusing way possible.
-let appName:string = require('../../../package.json').name;
-
 // The flavour of package configuration to load.
 let CONFIG_VARIETY:string = "production";
 let CONFIG_FILE_NAME:string = "config.json";
 
-let configFilePath:string = path.join(app.getPath("userData"), CONFIG_FILE_NAME);
+// Obtain the application name in the most amusing way possible.
+let appName:string = require('../../../package.json').name;
+
+let configFilePath:string = path.join(app.getPath("appData"), appName, CONFIG_FILE_NAME);
 
 // Load package config.
 let content:string = fs.readFileSync("./node/config/" + CONFIG_VARIETY + ".json");
