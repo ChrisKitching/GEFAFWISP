@@ -6,7 +6,8 @@
  */
 
 
-var fs = require("fs");
+const fs = require("fs");
+const mkdirp = require("mkdirp");
 import {app, ipcMain} from "electron";
 import * as path from  "path";
 import IpcMainEvent = Electron.IpcMainEvent;
@@ -18,7 +19,8 @@ let CONFIG_FILE_NAME:string = "config.json";
 // Obtain the application name in the most amusing way possible.
 let appName:string = require('../../../package.json').name;
 
-let configFilePath:string = path.join(app.getPath("appData"), appName, CONFIG_FILE_NAME);
+let configFolder: string = path.join(app.getPath("appData"), appName);
+let configFilePath:string = path.join(configFolder, CONFIG_FILE_NAME);
 
 // Load package config.
 let content:string = fs.readFileSync("./node/config/" + CONFIG_VARIETY + ".json");
@@ -45,15 +47,13 @@ export class Config {
     static configuration: any;
 
     static load() {
-        // Make sure the file exists.
-        fs.closeSync(fs.openSync(configFilePath, 'a'));
-
-        Config.configuration = defaultConfiguration;
-
         try {
+            // Make sure the file exists.
+            fs.closeSync(fs.openSync(configFilePath, 'a'));
             Config.configuration = JSON.parse(fs.readFileSync(configFilePath, 'utf8'));
         } catch (e) {
-            // File was presumably corrupt. Truncate it and start again.
+            // File was corrupt or we're launching for the first time. Truncate it and start again.
+            mkdirp(configFolder);
             fs.closeSync(fs.openSync(configFilePath, 'w'));
             Config.configuration = defaultConfiguration;
         }
