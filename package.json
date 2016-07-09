@@ -49,6 +49,7 @@
     "node-irc": "0.0.3",
     "object-to-map": "^1.0.0",
     "react": "^15.0.1",
+    "react-bootstrap": "^0.29.5",
     "react-dom": "^15.0.1",
     "react-tabs": "^0.6.1",
     "resolve-url-loader": "^1.4.4",
