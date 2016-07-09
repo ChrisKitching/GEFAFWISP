@@ -75,14 +75,14 @@ export class LobbyConnection extends EventEmitter {
      */
     handleSession(msg: MessageTypes.Session) {
         // Use the session ID to get the uid (this is all we need it for).
-        this.uid = execSync(path.join(".", "bin", "uid") + " " + msg.session).toString();
+        this.uid = execSync(path.join(".", "node_modules", ".bin", "uid") + " " + msg.session).toString();
         this.emit("connect");
     }
 
     /**
      * Handle a message from the server. Figures out the type and emits an appropriate event (or
      * handles it internally, if appropriate).
-     * @param msg Exactly one json message fromthe server.
+     * @param msg Exactly one json message from the server.
      */
     handleMessage(msg:string) {
         // console.log("Server message: " + msg);

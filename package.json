@@ -6,7 +6,7 @@
   "scripts": {
     "prestart": "tsc -sourcemap -p browser && tsc -sourcemap -p node",
     "start": "electron node",
-    "postinstall": "cd browser && typings install && cd ../node && typings install",
+    "postinstall": "cd browser && typings install && cd ../node && typings install && cd ../node_modules/.bin && github-releases --filename uid download FAForever/uid && chmod +x uid",
     "test": "mocha './test/**/*.spec.tsx' --compilers js:babel-core/register --require ignore-styles --recursive",
     "watch": "./node_modules/.bin/webpack-dev-server"
   },
@@ -45,6 +45,7 @@
     "iconv-lite": "^0.4.13",
     "irc": "^0.5.0",
     "jquery": "^3.0.0",
+    "github-releases": "^0.3.2",
     "lunr": "^0.7.1",
     "node-irc": "0.0.3",
     "object-to-map": "^1.0.0",
