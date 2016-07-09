@@ -36,7 +36,9 @@ interface FAFConfig {
 let defaultConfiguration = {
     // Path to the directory containing ForgedAlliance.exe
     // TODO: Currently we rely on the old client to have put this in the right place for us...
-    binaryPath: path.join(app.getPath("appData"), "FAForever", "bin")
+    binaryPath: path.join(app.getPath("appData"), "FAForever", "bin"),
+
+    gameLogFile: path.join(app.getPath("appData"), "FAForever", "log", "game.log")
 };
 
 export class Config {

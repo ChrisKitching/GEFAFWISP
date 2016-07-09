@@ -2,6 +2,7 @@ import 'jquery';
 import 'bootstrap';
 
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+
 import {ipcRenderer} from 'electron';
 import * as MessageTypes from "../../../node/src/net/MessageTypes";
 import * as React from "react";
