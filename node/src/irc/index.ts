@@ -12,7 +12,10 @@ import WebContents = Electron.WebContents;
  */
 export class IrcClient {
     ircClient:Client;
-    onMessage:(message:string) => void;
+    browser:WebContents;
+
+    // Your own username.
+    nick: string;
 
     /**
      * Connect, authenticate with NickServ, and join the requested channels.
@@ -23,6 +26,7 @@ export class IrcClient {
      * @param channels Channels to join post-authentication.
      */
     authenticateAndConnect(nickname: string, user_id: string, password:string, channels:string[]) {
+        this.nick = nickname;
         this.ircClient = new Client(pkgconfig.SERVERS.IRC.HOST, nickname, {
             port:pkgconfig.SERVERS.IRC.PORT,
             userName: user_id,
@@ -49,17 +53,34 @@ export class IrcClient {
         this.ircClient.connect();
     }
 
+    private handleAction(from:string, to:string, text:string) {
+        let browserEvent:IrcMessages.Action = <IrcMessages.Action> {
+            from: from,
+            target: to,
+            action: text,
+        };
+
+        this.browser.send("irc_action", browserEvent);
+    }
+
+    private handleMessage(nick:string, to:string, text:string) {
+        let browserEvent:IrcMessages.PublicMessage = <IrcMessages.PublicMessage> {
+            from: nick,
+            message: text,
+            channel: to
+        };
+
+        this.browser.send("irc_message", browserEvent);
+    }
+
     constructor(nickname:string, user_id: string, password:string, channels:string[], webContents:WebContents) {
         this.authenticateAndConnect(nickname, user_id, password, channels);
 
+        this.browser = webContents;
+
         // /me messages.
         this.ircClient.on('action', (from:string, to:string, text:string, message:any) => {
-            let browserEvent:IrcMessages.Action = <IrcMessages.Action> {
-                from: from,
-                target: to,
-                action: text,
-            };
-            webContents.send("irc_action", browserEvent);
+            this.handleAction(from, to, text);
         });
 
         this.ircClient.on('motd', (message:string) => {
@@ -78,15 +99,7 @@ export class IrcClient {
         });
 
         this.ircClient.on('message#', (nick:string, to:string, text:string, message:any) => {
-            console.error("MEessage: " + nick);
-            console.error("MEesage: " + text);
-            console.error("MEesage: " + message);
-            let browserEvent:IrcMessages.PublicMessage = <IrcMessages.PublicMessage> {
-                from: nick,
-                message: text,
-                channel: to
-            };
-            webContents.send("irc_message", browserEvent);
+            this.handleMessage(nick, to, text);
         });
 
         this.ircClient.on('join', (channel:string, who:string, message:any) => {
@@ -161,10 +174,16 @@ export class IrcClient {
 
         ipcMain.on('irc_action', (event: any, target:string, content:string) => {
             this.ircClient.action(target, content);
+
+            // Echo messages to yourself, since IRC doesn't do this.
+            this.handleAction(this.nick, target, content);
         });
 
         ipcMain.on('irc_message', (event: any, target:string, content:string) => {
             this.ircClient.say(target, content);
+
+            // Echo messages to yourself, since IRC doesn't do this.
+            this.handleMessage(this.nick, target, content);
         });
     }
 }
